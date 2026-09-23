@@ -28,6 +28,8 @@
   <style>
     body { background-color: #0B0F19; color: #E5E7EB; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .metric-card { background: #111827; border: 1px solid #1F2937; border-radius: 0.75rem; padding: 1.25rem; }
+    .tf-btn { transition: all 0.2s; }
+    .tf-btn.active { background-color: rgba(16, 185, 129, 0.2); color: #34D399; border-color: rgba(16, 185, 129, 0.4); }
   </style>
 </head>
 <body class="min-h-screen pb-16">
@@ -73,17 +75,17 @@
     <!-- KPI PRINCIPALES -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       
-      <!-- NAV & RENDIMIENTO TOTAL -->
+      <!-- 1. RETORNO TOTAL (SINCE INCEPTION) -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Valor Cuota (NAV)</div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="kpi-nav" class="text-3xl font-bold font-mono text-white">--</span>
-          <span id="kpi-cum" class="text-sm font-mono font-semibold px-2 py-0.5 rounded">--%</span>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Retorno Total (Since Inception)</div>
+        <div class="mt-2 flex items-baseline gap-2.5">
+          <span id="kpi-cum" class="text-3xl font-bold font-mono">--%</span>
+          <span class="text-xs font-mono text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded border border-gray-700">NAV: <span id="kpi-nav" class="text-gray-200 font-semibold">--</span></span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Base 100.00 • Retorno total acumulado</div>
+        <div class="mt-2 text-xs text-gray-500">Inception: <span id="inception-date" class="text-gray-400 font-mono">--</span> • Base 100.00</div>
       </div>
 
-      <!-- ÚLTIMA SESIÓN -->
+      <!-- 2. ÚLTIMA SESIÓN -->
       <div class="metric-card flex flex-col justify-between">
         <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Rendimiento Última Sesión</div>
         <div class="mt-2">
@@ -92,18 +94,18 @@
         <div class="mt-2 text-xs text-gray-500">Retorno neto de la sesión</div>
       </div>
 
-      <!-- DRAWDOWN: ACTUAL & MÁXIMO -->
+      <!-- 3. DRAWDOWN (MÁXIMO / ACTUAL) - INVERTIDO: MÁXIMO EN GRANDE -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Drawdown (Actual / Max)</div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Drawdown (Máximo / Actual)</div>
         <div class="mt-2 flex items-baseline gap-2">
-          <span id="kpi-dd" class="text-3xl font-bold font-mono text-rose-400">--%</span>
-          <span class="text-xs text-gray-400">/ Max:</span>
-          <span id="kpi-max-dd" class="text-base font-bold font-mono text-rose-500">--%</span>
+          <span id="kpi-max-dd" class="text-3xl font-bold font-mono text-rose-500">--%</span>
+          <span class="text-xs text-gray-400">/ Actual:</span>
+          <span id="kpi-dd" class="text-base font-bold font-mono text-rose-400">--%</span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Retroceso máximo desde pico histórico</div>
+        <div class="mt-2 text-xs text-gray-500">Peor caída histórica vs. retroceso actual</div>
       </div>
 
-      <!-- SHARPE RATIO (vs VOO) -->
+      <!-- 4. SHARPE RATIO (vs VOO) -->
       <div class="metric-card flex flex-col justify-between">
         <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Sharpe Ratio (Anualizado)</div>
         <div class="mt-2 flex items-baseline gap-3">
@@ -116,10 +118,14 @@
 
     </div>
 
-    <!-- RETORNOS POR PERÍODO (TRAILING RETURNS) -->
+    <!-- RETORNOS POR PERÍODOS MÓVILES (TRAILING RETURNS) CON 1 SEMANA INCLUIDA -->
     <div class="metric-card">
       <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Rendimiento por Períodos Móviles (Trailing Returns)</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
+          <div class="text-[11px] text-gray-400 font-medium">1 Semana</div>
+          <div id="ret-1w" class="text-lg font-mono font-bold mt-1">--</div>
+        </div>
         <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
           <div class="text-[11px] text-gray-400 font-medium">1 Mes</div>
           <div id="ret-1m" class="text-lg font-mono font-bold mt-1">--</div>
@@ -136,25 +142,40 @@
           <div class="text-[11px] text-gray-400 font-medium">1 Año</div>
           <div id="ret-1y" class="text-lg font-mono font-bold mt-1">--</div>
         </div>
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800 col-span-2 sm:col-span-1">
+        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
           <div class="text-[11px] text-gray-400 font-medium">YTD</div>
           <div id="ret-ytd" class="text-lg font-mono font-bold mt-1">--</div>
         </div>
       </div>
     </div>
 
-    <!-- GRÁFICO PRINCIPAL DE RENDIMIENTO COMPARATIVO -->
+    <!-- GRÁFICO PRINCIPAL DE RENDIMIENTO CON SELECTOR DE RANGOS -->
     <div class="metric-card">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
           <h2 class="text-base font-bold text-white tracking-wide">Curva de Rendimiento Comparativo</h2>
           <p class="text-xs text-gray-400">Evolución Time-Weighted Return (TWR) normalizada Base 100</p>
         </div>
-        <div class="flex items-center gap-4 text-xs font-mono">
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-400"></span> NScheelje Strategy</span>
-          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> S&P 500 (VOO)</span>
+
+        <!-- SELECTOR DE PERÍODOS (1S, 1M, 3M, 6M, 1A, YTD, TODO) -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-1 bg-gray-900/80 p-1 rounded-lg border border-gray-800 text-xs font-mono">
+            <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1S</button>
+            <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1M</button>
+            <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">3M</button>
+            <button onclick="changeTimeframe('6M')" id="btn-6M" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">6M</button>
+            <button onclick="changeTimeframe('1Y')" id="btn-1Y" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1A</button>
+            <button onclick="changeTimeframe('YTD')" id="btn-YTD" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">YTD</button>
+            <button onclick="changeTimeframe('ALL')" id="btn-ALL" class="tf-btn px-2.5 py-1 rounded active border">TODO</button>
+          </div>
+          
+          <div class="hidden sm:flex items-center gap-4 text-xs font-mono ml-2">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-400"></span> NScheelje Strategy</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> S&P 500 (VOO)</span>
+          </div>
         </div>
       </div>
+
       <div class="h-[360px] w-full">
         <canvas id="performanceChart"></canvas>
       </div>
@@ -221,6 +242,11 @@
 
   <!-- LÓGICA JAVASCRIPT INSTITUCIONAL -->
   <script>
+    let globalPortfolioData = [];
+    let perfChart = null;
+    let ddChart = null;
+    let currentRange = 'ALL';
+
     async function loadPortfolioData() {
       try {
         const response = await fetch('nav_history.csv?v=' + new Date().getTime());
@@ -259,14 +285,16 @@
 
         if (data.length === 0) return;
 
+        globalPortfolioData = data;
         updateDashboard(data);
+        renderCharts(data);
       } catch (err) {
         console.error("Error al renderizar el dashboard:", err);
       }
     }
 
     function calculateSharpe(returns) {
-      if (returns.length < 5) return "N/D"; // Muestra mínima estadística
+      if (returns.length < 5) return "N/D";
       const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
       const variance = returns.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (returns.length - 1);
       const std = Math.sqrt(variance);
@@ -321,28 +349,31 @@
     }
 
     function updateDashboard(data) {
+      const first = data[0];
       const last = data[data.length - 1];
       
-      // Fecha y KPIs
+      // Encabezado y Fecha Inception
       document.getElementById('last-date').innerText = last.date;
-      document.getElementById('kpi-nav').innerText = last.nav.toFixed(2);
-      
+      document.getElementById('inception-date').innerText = first.date;
+
+      // Card 1: Retorno Total (Since Inception) en grande y NAV secundario
       const cumElem = document.getElementById('kpi-cum');
       cumElem.innerText = `${last.cum_ret_pct >= 0 ? '+' : ''}${last.cum_ret_pct.toFixed(2)}%`;
-      cumElem.className = `text-sm font-mono font-semibold px-2 py-0.5 rounded ${last.cum_ret_pct >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`;
+      cumElem.className = `text-3xl font-bold font-mono ${last.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      document.getElementById('kpi-nav').innerText = last.nav.toFixed(2);
 
+      // Card 2: Retorno Última Sesión
       const dailyElem = document.getElementById('kpi-daily');
       dailyElem.innerText = `${last.daily_return_pct >= 0 ? '+' : ''}${last.daily_return_pct.toFixed(2)}%`;
       dailyElem.className = `text-3xl font-bold font-mono ${last.daily_return_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-      document.getElementById('kpi-dd').innerText = `${last.drawdown_pct.toFixed(2)}%`;
-
-      // Max DD Histórico
+      // Card 3: Drawdown Máximo Histórico en grande (izq) y Actual en pequeño (der)
       let maxDD = 0;
       data.forEach(d => { if (d.drawdown_pct < maxDD) maxDD = d.drawdown_pct; });
       document.getElementById('kpi-max-dd').innerText = `${maxDD.toFixed(2)}%`;
+      document.getElementById('kpi-dd').innerText = `${last.drawdown_pct.toFixed(2)}%`;
 
-      // Sharpe Ratio
+      // Card 4: Sharpe Ratio
       const stratDailyReturns = data.slice(1).map(d => d.daily_return_pct / 100);
       const benchDailyReturns = [];
       for (let i = 1; i < data.length; i++) {
@@ -353,25 +384,27 @@
       document.getElementById('kpi-sharpe').innerText = calculateSharpe(stratDailyReturns);
       document.getElementById('kpi-bench-sharpe').innerText = calculateSharpe(benchDailyReturns);
 
-      // Trailing Returns
+      // Trailing Returns (Incluyendo 1 Semana)
       const styleRet = (elemId, val) => {
         const el = document.getElementById(elemId);
+        if (!el) return;
         el.innerText = val;
         if (val.startsWith('+')) el.className = "text-lg font-mono font-bold mt-1 text-emerald-400";
         else if (val.startsWith('-')) el.className = "text-lg font-mono font-bold mt-1 text-rose-400";
         else el.className = "text-lg font-mono font-bold mt-1 text-gray-400";
       };
 
+      styleRet('ret-1w', calculateTrailingReturn(data, 7));
       styleRet('ret-1m', calculateTrailingReturn(data, 30));
       styleRet('ret-3m', calculateTrailingReturn(data, 90));
       styleRet('ret-6m', calculateTrailingReturn(data, 180));
       styleRet('ret-1y', calculateTrailingReturn(data, 365));
       styleRet('ret-ytd', calculateYTD(data));
 
-      // Tabla mensual
+      // Tabla Mensual
       renderMonthlyTable(data);
 
-      // Historial reciente
+      // Tabla Historial Reciente
       const historyTbody = document.getElementById('history-table-body');
       historyTbody.innerHTML = '';
       const recent = [...data].reverse().slice(0, 8);
@@ -387,10 +420,140 @@
         `;
         historyTbody.appendChild(tr);
       });
+    }
 
-      // Gráficos
-      renderPerformanceChart(data);
-      renderDrawdownChart(data);
+    function filterDataByTimeframe(data, tf) {
+      if (data.length <= 1 || tf === 'ALL') return data;
+      const lastDate = new Date(data[data.length - 1].date);
+      let targetTime = 0;
+
+      if (tf === '1W') targetTime = lastDate.getTime() - (7 * 24 * 60 * 60 * 1000);
+      else if (tf === '1M') targetTime = lastDate.getTime() - (30 * 24 * 60 * 60 * 1000);
+      else if (tf === '3M') targetTime = lastDate.getTime() - (90 * 24 * 60 * 60 * 1000);
+      else if (tf === '6M') targetTime = lastDate.getTime() - (180 * 24 * 60 * 60 * 1000);
+      else if (tf === '1Y') targetTime = lastDate.getTime() - (365 * 24 * 60 * 60 * 1000);
+      else if (tf === 'YTD') {
+        const currentYear = lastDate.getFullYear();
+        const filtered = data.filter(d => new Date(d.date).getFullYear() === currentYear);
+        return filtered.length > 0 ? filtered : data;
+      }
+
+      const filtered = data.filter(d => new Date(d.date).getTime() >= targetTime);
+      return filtered.length > 0 ? filtered : data;
+    }
+
+    function changeTimeframe(tf) {
+      currentRange = tf;
+      ['1W', '1M', '3M', '6M', '1Y', 'YTD', 'ALL'].forEach(id => {
+        const btn = document.getElementById(`btn-${id}`);
+        if (!btn) return;
+        if (id === tf) {
+          btn.className = "tf-btn px-2.5 py-1 rounded active border";
+        } else {
+          btn.className = "tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent";
+        }
+      });
+
+      const filtered = filterDataByTimeframe(globalPortfolioData, tf);
+      updateChartsWithData(filtered);
+    }
+
+    function renderCharts(data) {
+      const perfCtx = document.getElementById('performanceChart').getContext('2d');
+      const ddCtx = document.getElementById('drawdownChart').getContext('2d');
+
+      const labels = data.map(d => d.date);
+      const navStrat = data.map(d => d.nav);
+      const navBench = data.map(d => d.benchmark_nav);
+      const ddData = data.map(d => d.drawdown_pct);
+
+      perfChart = new Chart(perfCtx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'NScheelje Strategy',
+              data: navStrat,
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.1,
+              pointRadius: labels.length > 30 ? 0 : 3
+            },
+            {
+              label: 'S&P 500 (VOO)',
+              data: navBench,
+              borderColor: '#3B82F6',
+              borderDash: [4, 4],
+              borderWidth: 1.5,
+              fill: false,
+              tension: 0.1,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } },
+            y: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } }
+          }
+        }
+      });
+
+      ddChart = new Chart(ddCtx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Drawdown (%)',
+            data: ddData,
+            borderColor: '#EF4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+            borderWidth: 1.5,
+            fill: true,
+            tension: 0.1,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { display: false },
+            y: { max: 0, grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' }, callback: v => v + '%' } }
+          }
+        }
+      });
+    }
+
+    function updateChartsWithData(filtered) {
+      if (!perfChart || !ddChart) return;
+      const labels = filtered.map(d => d.date);
+
+      // Normalizar visualmente base del período seleccionado
+      const baseStrat = filtered[0].nav;
+      const baseBench = filtered[0].benchmark_nav;
+
+      const navStrat = filtered.map(d => (d.nav / baseStrat) * 100);
+      const navBench = filtered.map(d => (d.benchmark_nav / baseBench) * 100);
+      const ddData = filtered.map(d => d.drawdown_pct);
+
+      perfChart.data.labels = labels;
+      perfChart.data.datasets[0].data = navStrat;
+      perfChart.data.datasets[0].pointRadius = labels.length > 30 ? 0 : 3;
+      perfChart.data.datasets[1].data = navBench;
+      perfChart.update();
+
+      ddChart.data.labels = labels;
+      ddChart.data.datasets[0].data = ddData;
+      ddChart.update();
     }
 
     function renderMonthlyTable(data) {
@@ -456,84 +619,6 @@
         html += ytdHtml;
         tr.innerHTML = html;
         tbody.appendChild(tr);
-      });
-    }
-
-    function renderPerformanceChart(data) {
-      const ctx = document.getElementById('performanceChart').getContext('2d');
-      const labels = data.map(d => d.date);
-      const navStrat = data.map(d => d.nav);
-      const navBench = data.map(d => d.benchmark_nav);
-
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'NScheelje Strategy',
-              data: navStrat,
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.08)',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.1,
-              pointRadius: data.length > 30 ? 0 : 3
-            },
-            {
-              label: 'S&P 500 (VOO)',
-              data: navBench,
-              borderColor: '#3B82F6',
-              borderDash: [4, 4],
-              borderWidth: 1.5,
-              fill: false,
-              tension: 0.1,
-              pointRadius: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { intersect: false, mode: 'index' },
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } },
-            y: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } }
-          }
-        }
-      });
-    }
-
-    function renderDrawdownChart(data) {
-      const ctx = document.getElementById('drawdownChart').getContext('2d');
-      const labels = data.map(d => d.date);
-      const ddData = data.map(d => d.drawdown_pct);
-
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Drawdown (%)',
-            data: ddData,
-            borderColor: '#EF4444',
-            backgroundColor: 'rgba(239, 68, 68, 0.15)',
-            borderWidth: 1.5,
-            fill: true,
-            tension: 0.1,
-            pointRadius: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { display: false },
-            y: { max: 0, grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' }, callback: v => v + '%' } }
-          }
-        }
       });
     }
 
