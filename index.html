@@ -44,22 +44,25 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-bold text-lg tracking-wider text-white">NSCHEELJE STRATEGY</h1>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono uppercase tracking-widest font-semibold">Track-Record EOD</span>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono uppercase tracking-widest font-semibold">Track-Record</span>
           </div>
-          <p class="text-xs text-gray-400 font-mono">Multi-Asset Quantitative Portfolio • Cierre Diario Automatizado</p>
+          <p class="text-xs text-gray-400 font-mono">Multi-Asset Quantitative Portfolio</p>
         </div>
       </div>
       
-      <!-- AUDITORÍA Y ÚLTIMA SESIÓN -->
+      <!-- AUDITORÍA, FECHA Y ÚLTIMA SESIÓN COMPACTA -->
       <div class="flex items-center gap-3 sm:gap-4 text-right">
         <div>
           <span class="text-[10px] sm:text-xs text-gray-500 block uppercase tracking-wider">Último Cierre</span>
-          <span id="last-date" class="text-xs sm:text-sm font-mono text-gray-200 font-semibold">Cargando...</span>
+          <div class="flex items-center gap-1.5 justify-end">
+            <span id="last-date" class="text-xs sm:text-sm font-mono text-gray-200 font-semibold">Cargando...</span>
+            <span id="header-daily" class="text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">--%</span>
+          </div>
         </div>
         <a href="https://github.com/Stronghand42/portfolio-data/commits/main/nav_history.csv" 
            target="_blank" 
            rel="noopener noreferrer"
-           title="Ver historial criptográfico de commits en GitHub"
+           title="Verificación criptográfica de commits en GitHub"
            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-gray-800/80 hover:bg-gray-700 text-gray-200 border border-gray-700 hover:border-emerald-500 transition-all">
           <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
@@ -85,16 +88,17 @@
         <div class="mt-2 text-xs text-gray-500">Inception: <span id="inception-date" class="text-gray-400 font-mono">--</span> • Base 100.00</div>
       </div>
 
-      <!-- 2. ÚLTIMA SESIÓN -->
+      <!-- 2. CAGR (ANUALIZADO) VS BENCHMARK -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Rendimiento Última Sesión</div>
-        <div class="mt-2">
-          <span id="kpi-daily" class="text-3xl font-bold font-mono">--%</span>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">CAGR (Compuesto Anualizado)</div>
+        <div class="mt-2 flex items-baseline gap-3">
+          <span id="kpi-cagr" class="text-3xl font-bold font-mono text-emerald-400">--</span>
+          <span class="text-xs text-gray-400">S&P 500: <span id="kpi-bench-cagr" class="font-mono font-semibold text-blue-400">--</span></span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Retorno neto de la sesión</div>
+        <div class="mt-2 text-xs text-gray-500">Tasa de crecimiento anual compuesta</div>
       </div>
 
-      <!-- 3. DRAWDOWN (MÁXIMO / ACTUAL) - INVERTIDO: MÁXIMO EN GRANDE -->
+      <!-- 3. DRAWDOWN (MÁXIMO / ACTUAL) -->
       <div class="metric-card flex flex-col justify-between">
         <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Drawdown (Máximo / Actual)</div>
         <div class="mt-2 flex items-baseline gap-2">
@@ -118,7 +122,7 @@
 
     </div>
 
-    <!-- RETORNOS POR PERÍODOS MÓVILES (TRAILING RETURNS) CON 1 SEMANA INCLUIDA -->
+    <!-- RETORNOS POR PERÍODOS MÓVILES (TRAILING RETURNS) -->
     <div class="metric-card">
       <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Rendimiento por Períodos Móviles (Trailing Returns)</h3>
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
@@ -149,7 +153,7 @@
       </div>
     </div>
 
-    <!-- GRÁFICO PRINCIPAL DE RENDIMIENTO CON SELECTOR DE RANGOS -->
+    <!-- GRÁFICO PRINCIPAL CON SELECTOR DE PERÍODOS -->
     <div class="metric-card">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
@@ -157,7 +161,6 @@
           <p class="text-xs text-gray-400">Evolución Time-Weighted Return (TWR) normalizada Base 100</p>
         </div>
 
-        <!-- SELECTOR DE PERÍODOS (1S, 1M, 3M, 6M, 1A, YTD, TODO) -->
         <div class="flex flex-wrap items-center gap-2">
           <div class="flex items-center gap-1 bg-gray-900/80 p-1 rounded-lg border border-gray-800 text-xs font-mono">
             <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1S</button>
@@ -237,7 +240,7 @@
   </main>
 
   <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-gray-500 font-mono">
-    NScheelje Strategy • Sistema Cuantitativo EOD • Ejecutado de forma automatizada
+    NScheelje Strategy • Sistema Cuantitativo Multi-Asset
   </footer>
 
   <!-- LÓGICA JAVASCRIPT INSTITUCIONAL -->
@@ -291,6 +294,25 @@
       } catch (err) {
         console.error("Error al renderizar el dashboard:", err);
       }
+    }
+
+    function calculateCAGR(data, isBenchmark = false) {
+      if (data.length < 5) return "N/D";
+      const first = data[0];
+      const last = data[data.length - 1];
+      const d1 = new Date(first.date);
+      const d2 = new Date(last.date);
+      const diffDays = (d2 - d1) / (1000 * 60 * 60 * 24);
+      if (diffDays < 14) return "N/D";
+
+      const years = diffDays / 365.25;
+      const startVal = isBenchmark ? first.benchmark_nav : first.nav;
+      const endVal = isBenchmark ? last.benchmark_nav : last.nav;
+      
+      if (startVal <= 0 || endVal <= 0) return "N/D";
+      const cagr = (Math.pow(endVal / startVal, 1 / years) - 1) * 100;
+      const sign = cagr >= 0 ? '+' : '';
+      return `${sign}${cagr.toFixed(2)}%`;
     }
 
     function calculateSharpe(returns) {
@@ -352,22 +374,35 @@
       const first = data[0];
       const last = data[data.length - 1];
       
-      // Encabezado y Fecha Inception
+      // Encabezado
       document.getElementById('last-date').innerText = last.date;
       document.getElementById('inception-date').innerText = first.date;
 
-      // Card 1: Retorno Total (Since Inception) en grande y NAV secundario
+      // Rendimiento última sesión en el header
+      const headerDaily = document.getElementById('header-daily');
+      if (headerDaily) {
+        const sign = last.daily_return_pct >= 0 ? '+' : '';
+        headerDaily.innerText = `${sign}${last.daily_return_pct.toFixed(2)}%`;
+        headerDaily.className = `text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded ${last.daily_return_pct >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`;
+      }
+
+      // Card 1: Retorno Total (Since Inception)
       const cumElem = document.getElementById('kpi-cum');
       cumElem.innerText = `${last.cum_ret_pct >= 0 ? '+' : ''}${last.cum_ret_pct.toFixed(2)}%`;
       cumElem.className = `text-3xl font-bold font-mono ${last.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
       document.getElementById('kpi-nav').innerText = last.nav.toFixed(2);
 
-      // Card 2: Retorno Última Sesión
-      const dailyElem = document.getElementById('kpi-daily');
-      dailyElem.innerText = `${last.daily_return_pct >= 0 ? '+' : ''}${last.daily_return_pct.toFixed(2)}%`;
-      dailyElem.className = `text-3xl font-bold font-mono ${last.daily_return_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      // Card 2: CAGR
+      const cagrVal = calculateCAGR(data, false);
+      const benchCagrVal = calculateCAGR(data, true);
+      const cagrElem = document.getElementById('kpi-cagr');
+      cagrElem.innerText = cagrVal;
+      if (cagrVal.startsWith('+')) cagrElem.className = "text-3xl font-bold font-mono text-emerald-400";
+      else if (cagrVal.startsWith('-')) cagrElem.className = "text-3xl font-bold font-mono text-rose-400";
+      else cagrElem.className = "text-3xl font-bold font-mono text-gray-300";
+      document.getElementById('kpi-bench-cagr').innerText = benchCagrVal;
 
-      // Card 3: Drawdown Máximo Histórico en grande (izq) y Actual en pequeño (der)
+      // Card 3: Drawdown (Máximo a la izq en grande / Actual a la der)
       let maxDD = 0;
       data.forEach(d => { if (d.drawdown_pct < maxDD) maxDD = d.drawdown_pct; });
       document.getElementById('kpi-max-dd').innerText = `${maxDD.toFixed(2)}%`;
@@ -380,11 +415,10 @@
         const rBench = (data[i].benchmark_nav - data[i-1].benchmark_nav) / data[i-1].benchmark_nav;
         benchDailyReturns.push(rBench);
       }
-
       document.getElementById('kpi-sharpe').innerText = calculateSharpe(stratDailyReturns);
       document.getElementById('kpi-bench-sharpe').innerText = calculateSharpe(benchDailyReturns);
 
-      // Trailing Returns (Incluyendo 1 Semana)
+      // Trailing Returns
       const styleRet = (elemId, val) => {
         const el = document.getElementById(elemId);
         if (!el) return;
@@ -404,7 +438,7 @@
       // Tabla Mensual
       renderMonthlyTable(data);
 
-      // Tabla Historial Reciente
+      // Historial Reciente
       const historyTbody = document.getElementById('history-table-body');
       historyTbody.innerHTML = '';
       const recent = [...data].reverse().slice(0, 8);
@@ -537,7 +571,6 @@
       if (!perfChart || !ddChart) return;
       const labels = filtered.map(d => d.date);
 
-      // Normalizar visualmente base del período seleccionado
       const baseStrat = filtered[0].nav;
       const baseBench = filtered[0].benchmark_nav;
 
