@@ -75,49 +75,58 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
 
-    <!-- KPI PRINCIPALES -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- KPI PRINCIPALES (5 COLUMNAS ADAPTABLES) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       
       <!-- 1. RETORNO TOTAL (SINCE INCEPTION) -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Retorno Total (Since Inception)</div>
-        <div class="mt-2 flex items-baseline gap-2.5">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Retorno Total</div>
+        <div class="mt-2 flex items-baseline gap-2">
           <span id="kpi-cum" class="text-3xl font-bold font-mono">--%</span>
           <span class="text-xs font-mono text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded border border-gray-700">NAV: <span id="kpi-nav" class="text-gray-200 font-semibold">--</span></span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Inception: <span id="inception-date" class="text-gray-400 font-mono">--</span> • Base 100.00</div>
+        <div class="mt-2 text-xs text-gray-500">Inception: <span id="inception-date" class="text-gray-400 font-mono">--</span></div>
       </div>
 
-      <!-- 2. CAGR (ANUALIZADO) VS BENCHMARK -->
+      <!-- 2. CAGR (ANUALIZADO) VS S&P 500 -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">CAGR (Compuesto Anualizado)</div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">CAGR (Compuesto)</div>
         <div class="mt-2 flex items-baseline gap-3">
           <span id="kpi-cagr" class="text-3xl font-bold font-mono text-emerald-400">--</span>
-          <span class="text-xs text-gray-400">S&P 500: <span id="kpi-bench-cagr" class="font-mono font-semibold text-blue-400">--</span></span>
+          <span class="text-xs text-gray-400">S&P: <span id="kpi-bench-cagr" class="font-mono font-semibold text-blue-400">--</span></span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Tasa de crecimiento anual compuesta</div>
+        <div class="mt-2 text-xs text-gray-500">Crecimiento anual compuesto</div>
       </div>
 
-      <!-- 3. DRAWDOWN (MÁXIMO / ACTUAL) -->
+      <!-- 3. VOLATILIDAD ANUALIZADA VS S&P 500 -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Drawdown (Máximo / Actual)</div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="kpi-max-dd" class="text-3xl font-bold font-mono text-rose-500">--%</span>
-          <span class="text-xs text-gray-400">/ Actual:</span>
-          <span id="kpi-dd" class="text-base font-bold font-mono text-rose-400">--%</span>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Volatilidad (Anualizada)</div>
+        <div class="mt-2 flex items-baseline gap-3">
+          <span id="kpi-vol" class="text-3xl font-bold font-mono text-white">--</span>
+          <span class="text-xs text-gray-400">S&P: <span id="kpi-bench-vol" class="font-mono font-semibold text-blue-400">--</span></span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Peor caída histórica vs. retroceso actual</div>
+        <div class="mt-2 text-xs text-gray-500">Desviación estándar (σ × √252)</div>
       </div>
 
-      <!-- 4. SHARPE RATIO (vs VOO) -->
+      <!-- 4. SHARPE RATIO (vs S&P 500) -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Sharpe Ratio (Anualizado)</div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Sharpe Ratio</div>
         <div class="mt-2 flex items-baseline gap-3">
           <span id="kpi-sharpe" class="text-3xl font-bold font-mono text-emerald-400">--</span>
-          <span class="text-xs text-gray-400">S&P 500:</span>
-          <span id="kpi-bench-sharpe" class="text-sm font-bold font-mono text-blue-400">--</span>
+          <span class="text-xs text-gray-400">S&P: <span id="kpi-bench-sharpe" class="font-mono font-semibold text-blue-400">--</span></span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Eficiencia ajustada por volatilidad (Rf=0%)</div>
+        <div class="mt-2 text-xs text-gray-500">Retorno ajustado por riesgo (Rf=0%)</div>
+      </div>
+
+      <!-- 5. DRAWDOWN (MÁXIMO / ACTUAL) -->
+      <div class="metric-card flex flex-col justify-between">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Drawdown (Max / Act)</div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="kpi-max-dd" class="text-3xl font-bold font-mono text-rose-500">--%</span>
+          <span class="text-xs text-gray-400">/ Act:</span>
+          <span id="kpi-dd" class="text-base font-bold font-mono text-rose-400">--%</span>
+        </div>
+        <div class="mt-2 text-xs text-gray-500">Peor caída vs. retroceso actual</div>
       </div>
 
     </div>
@@ -315,6 +324,15 @@
       return `${sign}${cagr.toFixed(2)}%`;
     }
 
+    function calculateVolatility(returns) {
+      if (returns.length < 5) return "N/D";
+      const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+      const variance = returns.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (returns.length - 1);
+      const std = Math.sqrt(variance);
+      const annualizedVol = std * Math.sqrt(252) * 100;
+      return `${annualizedVol.toFixed(2)}%`;
+    }
+
     function calculateSharpe(returns) {
       if (returns.length < 5) return "N/D";
       const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
@@ -402,21 +420,27 @@
       else cagrElem.className = "text-3xl font-bold font-mono text-gray-300";
       document.getElementById('kpi-bench-cagr').innerText = benchCagrVal;
 
-      // Card 3: Drawdown (Máximo a la izq en grande / Actual a la der)
-      let maxDD = 0;
-      data.forEach(d => { if (d.drawdown_pct < maxDD) maxDD = d.drawdown_pct; });
-      document.getElementById('kpi-max-dd').innerText = `${maxDD.toFixed(2)}%`;
-      document.getElementById('kpi-dd').innerText = `${last.drawdown_pct.toFixed(2)}%`;
-
-      // Card 4: Sharpe Ratio
+      // Retornos diarios para estadísticas
       const stratDailyReturns = data.slice(1).map(d => d.daily_return_pct / 100);
       const benchDailyReturns = [];
       for (let i = 1; i < data.length; i++) {
         const rBench = (data[i].benchmark_nav - data[i-1].benchmark_nav) / data[i-1].benchmark_nav;
         benchDailyReturns.push(rBench);
       }
+
+      // Card 3: Volatilidad Anualizada
+      document.getElementById('kpi-vol').innerText = calculateVolatility(stratDailyReturns);
+      document.getElementById('kpi-bench-vol').innerText = calculateVolatility(benchDailyReturns);
+
+      // Card 4: Sharpe Ratio
       document.getElementById('kpi-sharpe').innerText = calculateSharpe(stratDailyReturns);
       document.getElementById('kpi-bench-sharpe').innerText = calculateSharpe(benchDailyReturns);
+
+      // Card 5: Drawdown (Máximo a la izq en grande / Actual a la der)
+      let maxDD = 0;
+      data.forEach(d => { if (d.drawdown_pct < maxDD) maxDD = d.drawdown_pct; });
+      document.getElementById('kpi-max-dd').innerText = `${maxDD.toFixed(2)}%`;
+      document.getElementById('kpi-dd').innerText = `${last.drawdown_pct.toFixed(2)}%`;
 
       // Trailing Returns
       const styleRet = (elemId, val) => {
