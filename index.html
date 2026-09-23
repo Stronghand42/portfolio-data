@@ -50,7 +50,7 @@
         </div>
       </div>
       
-      <!-- AUDITORÍA, FECHA Y ÚLTIMA SESIÓN COMPACTA -->
+      <!-- AUDITORÍA, FECHA Y ÚLTIMA SESIÓN -->
       <div class="flex items-center gap-3 sm:gap-4 text-right">
         <div>
           <span class="text-[10px] sm:text-xs text-gray-500 block uppercase tracking-wider">Último Cierre</span>
@@ -80,10 +80,9 @@
       
       <!-- 1. RETORNO TOTAL (SINCE INCEPTION) -->
       <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Retorno Total</div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Retorno Total (Since Inception)</div>
         <div class="mt-2 flex items-baseline gap-2">
           <span id="kpi-cum" class="text-3xl font-bold font-mono">--%</span>
-          <span class="text-xs font-mono text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded border border-gray-700">NAV: <span id="kpi-nav" class="text-gray-200 font-semibold">--</span></span>
         </div>
         <div class="mt-2 text-xs text-gray-500">Inception: <span id="inception-date" class="text-gray-400 font-mono">--</span></div>
       </div>
@@ -162,12 +161,12 @@
       </div>
     </div>
 
-    <!-- GRÁFICO PRINCIPAL CON SELECTOR DE PERÍODOS -->
+    <!-- GRÁFICO PRINCIPAL EN RENDIMIENTO PORCENTUAL DIRECTO (%) -->
     <div class="metric-card">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h2 class="text-base font-bold text-white tracking-wide">Curva de Rendimiento Comparativo</h2>
-          <p class="text-xs text-gray-400">Evolución Time-Weighted Return (TWR) normalizada Base 100</p>
+          <h2 class="text-base font-bold text-white tracking-wide">Curva de Rendimiento Comparativo (%)</h2>
+          <p class="text-xs text-gray-400">Retorno neto acumulado en porcentaje directo vs. S&P 500 (VOO)</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
@@ -232,11 +231,10 @@
           <thead class="border-b border-gray-800 text-gray-400">
             <tr>
               <th class="py-2">FECHA</th>
-              <th class="py-2">NAV</th>
-              <th class="py-2">RETORNO DÍA</th>
               <th class="py-2">RETORNO ACUM</th>
+              <th class="py-2">RETORNO DÍA</th>
               <th class="py-2">DRAWDOWN</th>
-              <th class="py-2">BENCHMARK NAV</th>
+              <th class="py-2">S&P 500 ACUM</th>
             </tr>
           </thead>
           <tbody id="history-table-body" class="divide-y divide-gray-800/40 text-gray-300">
@@ -291,7 +289,8 @@
             daily_return_pct: parseFloat(row.daily_return_pct || 0),
             cum_ret_pct: parseFloat(row.cum_ret_pct || 0),
             drawdown_pct: parseFloat(row.drawdown_pct || 0),
-            benchmark_nav: parseFloat(row.benchmark_nav || 100)
+            benchmark_nav: parseFloat(row.benchmark_nav || 100),
+            benchmark_cum_ret_pct: parseFloat(row.benchmark_cum_ret_pct || 0)
           });
         }
 
@@ -408,7 +407,6 @@
       const cumElem = document.getElementById('kpi-cum');
       cumElem.innerText = `${last.cum_ret_pct >= 0 ? '+' : ''}${last.cum_ret_pct.toFixed(2)}%`;
       cumElem.className = `text-3xl font-bold font-mono ${last.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-      document.getElementById('kpi-nav').innerText = last.nav.toFixed(2);
 
       // Card 2: CAGR
       const cagrVal = calculateCAGR(data, false);
@@ -436,7 +434,7 @@
       document.getElementById('kpi-sharpe').innerText = calculateSharpe(stratDailyReturns);
       document.getElementById('kpi-bench-sharpe').innerText = calculateSharpe(benchDailyReturns);
 
-      // Card 5: Drawdown (Máximo a la izq en grande / Actual a la der)
+      // Card 5: Drawdown
       let maxDD = 0;
       data.forEach(d => { if (d.drawdown_pct < maxDD) maxDD = d.drawdown_pct; });
       document.getElementById('kpi-max-dd').innerText = `${maxDD.toFixed(2)}%`;
@@ -462,19 +460,19 @@
       // Tabla Mensual
       renderMonthlyTable(data);
 
-      // Historial Reciente
+      // Historial Reciente (Enfoque en retornos netos %)
       const historyTbody = document.getElementById('history-table-body');
       historyTbody.innerHTML = '';
       const recent = [...data].reverse().slice(0, 8);
       recent.forEach(row => {
         const tr = document.createElement('tr');
+        const benchCum = ((row.benchmark_nav - data[0].benchmark_nav) / data[0].benchmark_nav) * 100;
         tr.innerHTML = `
           <td class="py-2">${row.date}</td>
-          <td class="py-2 font-bold">${row.nav.toFixed(4)}</td>
+          <td class="py-2 font-bold ${row.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.cum_ret_pct >= 0 ? '+' : ''}${row.cum_ret_pct.toFixed(2)}%</td>
           <td class="py-2 ${row.daily_return_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.daily_return_pct >= 0 ? '+' : ''}${row.daily_return_pct.toFixed(2)}%</td>
-          <td class="py-2 ${row.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.cum_ret_pct >= 0 ? '+' : ''}${row.cum_ret_pct.toFixed(2)}%</td>
           <td class="py-2 text-rose-400">${row.drawdown_pct.toFixed(2)}%</td>
-          <td class="py-2 text-gray-400">${row.benchmark_nav.toFixed(4)}</td>
+          <td class="py-2 text-gray-400">${benchCum >= 0 ? '+' : ''}${benchCum.toFixed(2)}%</td>
         `;
         historyTbody.appendChild(tr);
       });
@@ -521,8 +519,12 @@
       const ddCtx = document.getElementById('drawdownChart').getContext('2d');
 
       const labels = data.map(d => d.date);
-      const navStrat = data.map(d => d.nav);
-      const navBench = data.map(d => d.benchmark_nav);
+      const baseStrat = data[0].nav;
+      const baseBench = data[0].benchmark_nav;
+
+      // Retornos acumulados en porcentaje directo (%)
+      const retStrat = data.map(d => ((d.nav - baseStrat) / baseStrat) * 100);
+      const retBench = data.map(d => ((d.benchmark_nav - baseBench) / baseBench) * 100);
       const ddData = data.map(d => d.drawdown_pct);
 
       perfChart = new Chart(perfCtx, {
@@ -532,7 +534,7 @@
           datasets: [
             {
               label: 'NScheelje Strategy',
-              data: navStrat,
+              data: retStrat,
               borderColor: '#10B981',
               backgroundColor: 'rgba(16, 185, 129, 0.08)',
               borderWidth: 2,
@@ -542,7 +544,7 @@
             },
             {
               label: 'S&P 500 (VOO)',
-              data: navBench,
+              data: retBench,
               borderColor: '#3B82F6',
               borderDash: [4, 4],
               borderWidth: 1.5,
@@ -556,10 +558,30 @@
           responsive: true,
           maintainAspectRatio: false,
           interaction: { intersect: false, mode: 'index' },
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) label += ': ';
+                  const val = context.parsed.y;
+                  label += (val >= 0 ? '+' : '') + val.toFixed(2) + '%';
+                  return label;
+                }
+              }
+            }
+          },
           scales: {
             x: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } },
-            y: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } }
+            y: {
+              grid: { color: '#1F2937' },
+              ticks: {
+                color: '#9CA3AF',
+                font: { family: 'monospace' },
+                callback: v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%'
+              }
+            }
           }
         }
       });
@@ -595,17 +617,18 @@
       if (!perfChart || !ddChart) return;
       const labels = filtered.map(d => d.date);
 
+      // El punto inicial del período seleccionado arranca exactamente en 0.00%
       const baseStrat = filtered[0].nav;
       const baseBench = filtered[0].benchmark_nav;
 
-      const navStrat = filtered.map(d => (d.nav / baseStrat) * 100);
-      const navBench = filtered.map(d => (d.benchmark_nav / baseBench) * 100);
+      const retStrat = filtered.map(d => ((d.nav - baseStrat) / baseStrat) * 100);
+      const retBench = filtered.map(d => ((d.benchmark_nav - baseBench) / baseBench) * 100);
       const ddData = filtered.map(d => d.drawdown_pct);
 
       perfChart.data.labels = labels;
-      perfChart.data.datasets[0].data = navStrat;
+      perfChart.data.datasets[0].data = retStrat;
       perfChart.data.datasets[0].pointRadius = labels.length > 30 ? 0 : 3;
-      perfChart.data.datasets[1].data = navBench;
+      perfChart.data.datasets[1].data = retBench;
       perfChart.update();
 
       ddChart.data.labels = labels;
