@@ -21,9 +21,9 @@
           colors: {
             void: {
               base: '#020306',
-              surface: 'rgba(8, 10, 16, 0.72)',
-              surfaceElevated: 'rgba(13, 16, 26, 0.85)',
-              border: 'rgba(255, 255, 255, 0.08)',
+              surface: '#07090F',
+              surfaceElevated: '#0C0E17',
+              border: 'rgba(255, 255, 255, 0.07)',
               borderFaint: 'rgba(255, 255, 255, 0.03)',
             }
           }
@@ -43,14 +43,11 @@
       letter-spacing: -0.02em;
     }
     .celestial-card {
-      background: rgba(8, 10, 16, 0.72);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background-color: #07090F;
       border: 1px solid rgba(255, 255, 255, 0.07);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
     }
     .tf-btn {
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
     .tf-btn.active {
       background-color: rgba(255, 255, 255, 0.1);
@@ -59,27 +56,6 @@
     }
     details summary::-webkit-details-marker {
       display: none;
-    }
-    @keyframes orbit-cw {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes orbit-ccw {
-      from { transform: rotate(360deg); }
-      to { transform: rotate(0deg); }
-    }
-    @keyframes celestial-pulse {
-      0%, 100% { transform: scale(1); opacity: 0.35; }
-      50% { transform: scale(1.05); opacity: 0.75; }
-    }
-    .anim-orbit-slow {
-      animation: orbit-cw 180s linear infinite;
-    }
-    .anim-orbit-reverse {
-      animation: orbit-ccw 240s linear infinite;
-    }
-    .anim-pulse-subtle {
-      animation: celestial-pulse 5s ease-in-out infinite;
     }
     ::-webkit-scrollbar {
       height: 5px;
@@ -96,14 +72,14 @@
 </head>
 <body class="min-h-screen selection:bg-white/20 selection:text-white relative overflow-x-hidden">
 
-  <!-- FONDO VECTORIAL PERPETUO: CARTOGRAFÍA CELESTIAL -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-35">
-    <svg class="w-full h-full anim-orbit-slow" viewBox="0 0 1600 1600" fill="none" stroke="currentColor">
-      <ellipse cx="800" cy="800" rx="720" ry="260" transform="rotate(-30 800 800)" stroke="white" stroke-width="0.75" stroke-dasharray="2 6" stroke-opacity="0.3" />
-      <ellipse cx="800" cy="800" rx="600" ry="210" transform="rotate(40 800 800)" stroke="white" stroke-width="0.5" stroke-opacity="0.25" />
-      <ellipse cx="800" cy="800" rx="460" ry="160" transform="rotate(-15 800 800)" stroke="white" stroke-width="0.75" stroke-dasharray="4 8" stroke-opacity="0.35" />
-      <ellipse cx="800" cy="800" rx="310" ry="110" transform="rotate(25 800 800)" stroke="white" stroke-width="0.5" stroke-opacity="0.4" />
-      <circle cx="800" cy="800" r="140" stroke="white" stroke-width="0.5" stroke-dasharray="1 5" stroke-opacity="0.2" />
+  <!-- FONDO VECTORIAL ESTÁTICO: CERO CONSUMO DE GPU -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30">
+    <svg class="w-full h-full" viewBox="0 0 1600 1600" fill="none" stroke="currentColor">
+      <ellipse cx="800" cy="800" rx="740" ry="270" transform="rotate(-30 800 800)" stroke="white" stroke-width="0.75" stroke-dasharray="2 6" stroke-opacity="0.3" />
+      <ellipse cx="800" cy="800" rx="610" ry="215" transform="rotate(40 800 800)" stroke="white" stroke-width="0.5" stroke-opacity="0.25" />
+      <ellipse cx="800" cy="800" rx="470" ry="165" transform="rotate(-15 800 800)" stroke="white" stroke-width="0.75" stroke-dasharray="4 8" stroke-opacity="0.35" />
+      <ellipse cx="800" cy="800" rx="320" ry="115" transform="rotate(25 800 800)" stroke="white" stroke-width="0.5" stroke-opacity="0.4" />
+      <circle cx="800" cy="800" r="145" stroke="white" stroke-width="0.5" stroke-dasharray="1 5" stroke-opacity="0.2" />
       
       <!-- Nodos celestes y constelaciones -->
       <circle cx="280" cy="540" r="1.5" fill="white" opacity="0.6" />
@@ -119,19 +95,18 @@
   </div>
 
   <!-- PANTALLA INICIAL ORBITAL (SIN TEXTO, EXCLUSIVAMENTE BOTÓN CENTRAL) -->
-  <div id="gate-screen" class="fixed inset-0 z-[100] bg-[#020306] flex items-center justify-center overflow-hidden transition-all duration-700 ease-out select-none">
+  <div id="gate-screen" class="fixed inset-0 z-[100] bg-[#020306] flex items-center justify-center overflow-hidden transition-opacity duration-500 ease-out select-none">
     
-    <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40 anim-orbit-reverse" viewBox="0 0 1000 1000" fill="none" stroke="currentColor">
+    <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-30" viewBox="0 0 1000 1000" fill="none" stroke="currentColor">
       <ellipse cx="500" cy="500" rx="430" ry="160" transform="rotate(-20 500 500)" stroke="white" stroke-width="0.75" stroke-dasharray="3 7" stroke-opacity="0.3" />
       <ellipse cx="500" cy="500" rx="330" ry="120" transform="rotate(35 500 500)" stroke="white" stroke-width="0.5" stroke-opacity="0.25" />
       <ellipse cx="500" cy="500" rx="240" ry="85" transform="rotate(-10 500 500)" stroke="white" stroke-width="0.75" stroke-dasharray="2 5" stroke-opacity="0.35" />
     </svg>
 
-    <button onclick="enterDashboard()" aria-label="Ingresar" class="group relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center bg-black border border-white/20 hover:border-white/80 transition-all duration-500 hover:scale-105 focus:outline-none shadow-[0_0_60px_rgba(0,0,0,1)]">
-      <div class="absolute inset-0 rounded-full border border-white/10 anim-pulse-subtle"></div>
-      <div class="absolute -inset-3 rounded-full border border-white/5 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"></div>
+    <button onclick="enterDashboard()" aria-label="Ingresar" class="group relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center bg-black border border-white/20 hover:border-white/80 transition-all duration-300 hover:scale-105 focus:outline-none shadow-[0_0_50px_rgba(0,0,0,1)]">
+      <div class="absolute inset-0 rounded-full border border-white/10"></div>
 
-      <!-- Icono grabador planetario orbital -->
+      <!-- Icono orbital astronómico -->
       <svg class="w-12 h-12 sm:w-14 sm:h-14 text-white/70 group-hover:text-white transition-colors duration-300" viewBox="0 0 64 64" fill="none" stroke="currentColor">
         <circle cx="32" cy="32" r="13" fill="#020306" stroke="currentColor" stroke-width="1.25" />
         <path d="M 23 27 C 26 30, 38 30, 41 27" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2 2" opacity="0.4" />
@@ -144,14 +119,13 @@
   </div>
 
   <!-- DASHBOARD PRINCIPAL CELESTIAL -->
-  <div id="dashboard-view" class="relative z-10 opacity-0 transition-opacity duration-500 pb-24">
+  <div id="dashboard-view" class="relative z-10 opacity-0 transition-opacity duration-300 pb-24">
 
     <!-- TOP NAVIGATION APP BAR -->
-    <header class="border-b border-void-border bg-void-base/80 backdrop-blur-md sticky top-0 z-50">
+    <header class="border-b border-void-border bg-[#020306]/95 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         <div class="flex items-center gap-3.5">
-          <!-- Monograma estilizado como glifo planetario -->
           <div class="w-8 h-8 rounded-full border border-white/20 bg-white/[0.03] flex items-center justify-center font-mono font-bold text-xs text-white">
             NS
           </div>
@@ -159,7 +133,7 @@
             <div class="flex items-center gap-2">
               <h1 class="font-semibold text-sm tracking-wide text-white">NSCHEELJE STRATEGY</h1>
               <span class="inline-flex items-center gap-1.5 text-[10px] bg-white/[0.04] text-slate-300 border border-white/10 px-2 py-0.5 rounded-full font-mono uppercase tracking-wider">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                 Verified
               </span>
             </div>
@@ -196,7 +170,7 @@
     <!-- CUERPO PRINCIPAL DEL DASHBOARD -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-5">
 
-      <!-- FRANJA DE KPIS DE PRECISIÓN -->
+      <!-- FRANJA DE KPIS -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
         
         <div class="celestial-card rounded-lg p-4 flex flex-col justify-between">
@@ -258,7 +232,7 @@
 
       </div>
 
-      <!-- TRAYECTORIA PRINCIPAL: GRÁFICO PROTAGONISTA (480PX) -->
+      <!-- TRAYECTORIA PRINCIPAL: GRÁFICO (480PX) -->
       <div class="celestial-card rounded-lg p-5">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-3 border-b border-void-border">
           <div>
@@ -267,7 +241,7 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-1 bg-black/60 p-1 rounded border border-white/10 text-xs font-mono">
+            <div class="flex items-center gap-1 bg-black p-1 rounded border border-white/10 text-xs font-mono">
               <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1S</button>
               <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1M</button>
               <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">3M</button>
@@ -279,7 +253,7 @@
             
             <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
               <span class="flex items-center gap-1.5 text-slate-300">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span> NScheelje Strategy
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> NScheelje Strategy
               </span>
               <span class="flex items-center gap-1.5 text-slate-400">
                 <span class="w-3 h-0.5 border-b border-dashed border-slate-400"></span> S&P 500 (VOO)
@@ -293,7 +267,7 @@
         </div>
       </div>
 
-      <!-- DESPLEGABLE: PERÍODOS MÓVILES (TRAILING RETURNS) -->
+      <!-- DESPLEGABLE: PERÍODOS MÓVILES -->
       <details class="celestial-card rounded-lg group">
         <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors select-none">
           <div class="flex items-center gap-2">
@@ -311,27 +285,27 @@
         
         <div class="p-4 pt-1 border-t border-void-border">
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center pt-2">
-            <div class="bg-black/50 p-2.5 rounded border border-white/[0.04]">
+            <div class="bg-black/60 p-2.5 rounded border border-white/[0.04]">
               <div class="text-[10px] text-slate-500 font-mono uppercase">1 Semana</div>
               <div id="ret-1w" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
             </div>
-            <div class="bg-black/50 p-2.5 rounded border border-white/[0.04]">
+            <div class="bg-black/60 p-2.5 rounded border border-white/[0.04]">
               <div class="text-[10px] text-slate-500 font-mono uppercase">1 Mes</div>
               <div id="ret-1m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
             </div>
-            <div class="bg-black/50 p-2.5 rounded border border-white/[0.04]">
+            <div class="bg-black/60 p-2.5 rounded border border-white/[0.04]">
               <div class="text-[10px] text-slate-500 font-mono uppercase">3 Meses</div>
               <div id="ret-3m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
             </div>
-            <div class="bg-black/50 p-2.5 rounded border border-white/[0.04]">
+            <div class="bg-black/60 p-2.5 rounded border border-white/[0.04]">
               <div class="text-[10px] text-slate-500 font-mono uppercase">6 Meses</div>
               <div id="ret-6m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
             </div>
-            <div class="bg-black/50 p-2.5 rounded border border-white/[0.04]">
+            <div class="bg-black/60 p-2.5 rounded border border-white/[0.04]">
               <div class="text-[10px] text-slate-500 font-mono uppercase">1 Año</div>
               <div id="ret-1y" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
             </div>
-            <div class="bg-black/50 p-2.5 rounded border border-white/[0.04]">
+            <div class="bg-black/60 p-2.5 rounded border border-white/[0.04]">
               <div class="text-[10px] text-slate-500 font-mono uppercase">YTD</div>
               <div id="ret-ytd" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
             </div>
@@ -339,7 +313,7 @@
         </div>
       </details>
 
-      <!-- TABLA DE RENDIMIENTOS MENSUALES CONSOLIDADOS -->
+      <!-- TABLA DE RETORNOS MENSUALES -->
       <div class="celestial-card rounded-lg p-5">
         <div class="mb-4">
           <h2 class="text-sm font-semibold text-white tracking-wide">Rendimientos Mensuales Consolidados (%)</h2>
@@ -374,7 +348,7 @@
         </div>
       </div>
 
-      <!-- AUDITORÍA DE LIQUIDACIONES RECIENTES -->
+      <!-- AUDITORÍA DE LIQUIDACIONES -->
       <div class="celestial-card rounded-lg p-5">
         <h2 class="text-sm font-semibold text-white tracking-wide mb-3">Auditoría de Liquidaciones Recientes</h2>
         <div class="overflow-x-auto">
@@ -417,11 +391,13 @@
       gate.style.pointerEvents = 'none';
       
       setTimeout(() => {
+        // Desmontar completamente del árbol de renderizado
         gate.style.display = 'none';
+        gate.innerHTML = ''; 
         dashboard.classList.remove('opacity-0');
         if (perfChart) perfChart.resize();
         if (ddChart) ddChart.resize();
-      }, 500);
+      }, 350);
     }
 
     async function loadPortfolioData() {
@@ -685,7 +661,7 @@
       const ddData = data.map(d => d.drawdown_pct);
 
       const stratGradient = perfCtx.createLinearGradient(0, 0, 0, 460);
-      stratGradient.addColorStop(0, 'rgba(16, 185, 129, 0.16)');
+      stratGradient.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
       stratGradient.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
 
       perfChart = new Chart(perfCtx, {
@@ -702,15 +678,13 @@
               fill: true,
               tension: 0.08,
               pointRadius: labels.length > 40 ? 0 : 2.5,
-              pointHoverRadius: 4.5,
-              pointBackgroundColor: '#10B981',
-              pointBorderColor: '#020306',
-              pointBorderWidth: 1.5
+              pointHoverRadius: 4,
+              pointBackgroundColor: '#10B981'
             },
             {
               label: 'S&P 500 (VOO)',
               data: retBench,
-              borderColor: 'rgba(255, 255, 255, 0.45)',
+              borderColor: 'rgba(255, 255, 255, 0.4)',
               borderDash: [3, 4],
               borderWidth: 1.25,
               fill: false,
@@ -726,7 +700,7 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: 'rgba(4, 5, 8, 0.95)',
+              backgroundColor: '#07090F',
               borderColor: 'rgba(255, 255, 255, 0.15)',
               borderWidth: 1,
               titleFont: { family: 'JetBrains Mono', size: 11 },
@@ -746,11 +720,11 @@
           },
           scales: {
             x: {
-              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              grid: { color: 'rgba(255, 255, 255, 0.03)' },
               ticks: { color: '#64748B', font: { family: 'JetBrains Mono', size: 10 } }
             },
             y: {
-              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              grid: { color: 'rgba(255, 255, 255, 0.03)' },
               ticks: {
                 color: '#64748B',
                 font: { family: 'JetBrains Mono', size: 10 },
@@ -763,7 +737,7 @@
 
       const ddGradient = ddCtx.createLinearGradient(0, 0, 0, 130);
       ddGradient.addColorStop(0, 'rgba(244, 63, 94, 0.02)');
-      ddGradient.addColorStop(1, 'rgba(244, 63, 94, 0.22)');
+      ddGradient.addColorStop(1, 'rgba(244, 63, 94, 0.20)');
 
       ddChart = new Chart(ddCtx, {
         type: 'line',
@@ -788,7 +762,7 @@
             x: { display: false },
             y: {
               max: 0,
-              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              grid: { color: 'rgba(255, 255, 255, 0.03)' },
               ticks: {
                 color: '#64748B',
                 font: { family: 'JetBrains Mono', size: 10 },
