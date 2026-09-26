@@ -6,7 +6,7 @@
   <title>NScheelje Strategy | Quantitative Track-Record</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
@@ -20,17 +20,10 @@
           },
           colors: {
             surface: {
-              base: '#07090E',
-              card: '#0D111A',
-              cardHover: '#111724',
-              border: 'rgba(255, 255, 255, 0.07)',
-              borderSubtle: 'rgba(255, 255, 255, 0.04)',
-            },
-            accent: {
-              emerald: '#10B981',
-              emeraldMuted: '#059669',
-              blue: '#38BDF8',
-              rose: '#F43F5E',
+              base: '#06080D',
+              card: '#0B0F17',
+              border: 'rgba(255, 255, 255, 0.05)',
+              borderSubtle: 'rgba(255, 255, 255, 0.03)',
             }
           }
         }
@@ -39,59 +32,57 @@
   </script>
   <style>
     body {
-      background-color: #07090E;
+      background-color: #06080D;
       color: #E2E8F0;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
     .num-tabular {
       font-feature-settings: "tnum" 1, "cv05" 1;
       letter-spacing: -0.02em;
     }
     .panel-card {
-      background: linear-gradient(180deg, rgba(16, 22, 34, 0.8) 0%, rgba(13, 17, 26, 0.95) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-    }
-    .hairline-border {
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      background-color: #0B0F17;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .tf-btn {
       transition: all 0.15s ease-in-out;
     }
     .tf-btn.active {
-      background-color: rgba(16, 185, 129, 0.15);
+      background-color: rgba(16, 185, 129, 0.12);
       color: #34D399;
-      border-color: rgba(16, 185, 129, 0.35);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    details summary::-webkit-details-marker {
+      display: none;
     }
     ::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
+      height: 5px;
+      width: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: #07090E;
+      background: #06080D;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1E293B;
+      background: #1A2234;
       border-radius: 3px;
     }
   </style>
 </head>
-<body class="min-h-screen pb-20 selection:bg-emerald-500/20 selection:text-emerald-300">
+<body class="min-h-screen pb-24 selection:bg-emerald-500/20 selection:text-emerald-300">
 
   <!-- TOP APP BAR -->
   <header class="border-b border-surface-border bg-surface-base/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
-      <div class="flex items-center gap-3.5">
-        <div class="w-8 h-8 rounded border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center font-mono font-bold text-sm text-emerald-400">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center font-mono font-bold text-xs text-emerald-400">
           NS
         </div>
         <div>
           <div class="flex items-center gap-2">
             <h1 class="font-semibold text-sm tracking-wide text-white">NSCHEELJE STRATEGY</h1>
-            <span class="inline-flex items-center gap-1 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-2 py-0.5 rounded font-mono uppercase tracking-wider font-medium">
+            <span class="inline-flex items-center gap-1 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono uppercase tracking-wider">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               Verified
             </span>
@@ -100,16 +91,16 @@
         </div>
       </div>
       
-      <div class="flex items-center gap-3 sm:gap-6 text-right">
+      <div class="flex items-center gap-4 sm:gap-6 text-right">
         <div>
           <span class="text-[10px] uppercase font-mono tracking-widest text-slate-400 block">Último Cierre</span>
           <div class="flex items-center gap-1.5 justify-end">
-            <span id="last-date" class="text-xs font-mono num-tabular text-slate-200 font-medium">--</span>
+            <span id="last-date" class="text-xs font-mono num-tabular text-slate-300 font-medium">--</span>
             <span id="header-daily" class="text-[11px] font-mono num-tabular font-medium px-1.5 py-0.5 rounded border border-transparent">--%</span>
           </div>
         </div>
 
-        <div class="h-7 w-[1px] bg-white/10 hidden sm:block"></div>
+        <div class="h-6 w-[1px] bg-white/10 hidden sm:block"></div>
 
         <a href="https://github.com/Stronghand42/portfolio-data/commits/main/nav_history.csv" 
            target="_blank" 
@@ -126,112 +117,81 @@
     </div>
   </header>
 
-  <!-- DASHBOARD WRAPPER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-7 space-y-6">
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-5">
 
-    <!-- KPI ROW (5 CARDS) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
+    <!-- KPI STRIP -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
       
       <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Retorno Total</div>
-        <div class="mt-2.5 flex items-baseline gap-2">
-          <span id="kpi-cum" class="text-2xl font-bold font-mono num-tabular tracking-tight">--%</span>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Retorno Total</span>
+        <div class="my-2">
+          <span id="kpi-cum" class="text-2xl font-bold font-mono num-tabular">--%</span>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>Inception</span>
+        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>Inception:</span>
           <span id="inception-date" class="text-slate-300">--</span>
         </div>
       </div>
 
       <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">CAGR Compuesto</div>
-        <div class="mt-2.5 flex items-baseline gap-2">
-          <span id="kpi-cagr" class="text-2xl font-bold font-mono num-tabular tracking-tight text-emerald-400">--</span>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">CAGR Compuesto</span>
+        <div class="my-2">
+          <span id="kpi-cagr" class="text-2xl font-bold font-mono num-tabular text-emerald-400">--</span>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
           <span>S&P 500:</span>
           <span id="kpi-bench-cagr" class="text-slate-300 num-tabular">--</span>
         </div>
       </div>
 
       <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Volatilidad (σ × √252)</div>
-        <div class="mt-2.5 flex items-baseline gap-2">
-          <span id="kpi-vol" class="text-2xl font-bold font-mono num-tabular tracking-tight text-slate-200">--</span>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Volatilidad (σ × √252)</span>
+        <div class="my-2">
+          <span id="kpi-vol" class="text-2xl font-bold font-mono num-tabular text-slate-200">--</span>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
           <span>S&P 500:</span>
           <span id="kpi-bench-vol" class="text-slate-300 num-tabular">--</span>
         </div>
       </div>
 
       <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Sharpe Ratio</div>
-        <div class="mt-2.5 flex items-baseline gap-2">
-          <span id="kpi-sharpe" class="text-2xl font-bold font-mono num-tabular tracking-tight text-emerald-400">--</span>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Sharpe Ratio</span>
+        <div class="my-2">
+          <span id="kpi-sharpe" class="text-2xl font-bold font-mono num-tabular text-emerald-400">--</span>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
           <span>S&P 500:</span>
           <span id="kpi-bench-sharpe" class="text-slate-300 num-tabular">--</span>
         </div>
       </div>
 
       <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Drawdown (Max / Act)</div>
-        <div class="mt-2.5 flex items-baseline gap-2">
-          <span id="kpi-max-dd" class="text-2xl font-bold font-mono num-tabular tracking-tight text-rose-500">--%</span>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Drawdown (Max / Act)</span>
+        <div class="my-2 flex items-baseline gap-1.5">
+          <span id="kpi-max-dd" class="text-2xl font-bold font-mono num-tabular text-rose-500">--%</span>
           <span class="text-xs text-slate-400 font-mono">/</span>
           <span id="kpi-dd" class="text-sm font-bold font-mono num-tabular text-rose-400">--%</span>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>Trough to Peak</span>
+        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>Retroceso:</span>
           <span class="text-slate-300">ATH</span>
         </div>
       </div>
 
     </div>
 
-    <!-- TRAILING RETURNS -->
-    <div class="panel-card rounded-lg p-4">
-      <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-3">Rendimiento por Períodos Móviles (Trailing Returns)</div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center">
-        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
-          <div class="text-[10px] text-slate-400 font-mono uppercase">1 Semana</div>
-          <div id="ret-1w" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-        </div>
-        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
-          <div class="text-[10px] text-slate-400 font-mono uppercase">1 Mes</div>
-          <div id="ret-1m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-        </div>
-        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
-          <div class="text-[10px] text-slate-400 font-mono uppercase">3 Meses</div>
-          <div id="ret-3m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-        </div>
-        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
-          <div class="text-[10px] text-slate-400 font-mono uppercase">6 Meses</div>
-          <div id="ret-6m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-        </div>
-        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
-          <div class="text-[10px] text-slate-400 font-mono uppercase">1 Año</div>
-          <div id="ret-1y" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-        </div>
-        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
-          <div class="text-[10px] text-slate-400 font-mono uppercase">YTD</div>
-          <div id="ret-ytd" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRIMARY PERFORMANCE CHART -->
+    <!-- HERO PERFORMANCE CHART (MAXIMIZED VIEW) -->
     <div class="panel-card rounded-lg p-5">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-3 border-b border-white/[0.05]">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-3 border-b border-surface-border">
         <div>
           <h2 class="text-sm font-semibold text-white tracking-wide">Rendimiento Histórico Acumulado Net-of-Fees (%)</h2>
-          <p class="text-xs text-slate-400 font-mono mt-0.5">Retorno auditado con rebalanceo automático vs. Benchmark de referencia</p>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">Retorno auditado con rebalanceo automático vs. Benchmark</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-          <div class="flex items-center gap-1 bg-black/40 p-1 rounded border border-white/[0.06] text-xs font-mono">
+          <div class="flex items-center gap-1 bg-black/40 p-1 rounded border border-white/[0.05] text-xs font-mono">
             <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1S</button>
             <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1M</button>
             <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">3M</button>
@@ -252,33 +212,78 @@
         </div>
       </div>
 
-      <div class="h-[360px] w-full">
+      <!-- Aumentado a 480px para máxima claridad -->
+      <div class="h-[480px] w-full">
         <canvas id="performanceChart"></canvas>
       </div>
     </div>
 
+    <!-- ACCORDION: TRAILING RETURNS -->
+    <details class="panel-card rounded-lg group">
+      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors select-none">
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-300 font-medium">Rendimiento por Períodos Móviles (Trailing Returns)</span>
+          <span class="text-[10px] text-slate-500 font-mono">[1S, 1M, 3M, 6M, 1A, YTD]</span>
+        </div>
+        <div class="flex items-center gap-2 text-slate-400 text-xs font-mono">
+          <span class="text-[11px] group-open:hidden">Ver períodos</span>
+          <span class="text-[11px] hidden group-open:inline">Ocultar</span>
+          <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </summary>
+      
+      <div class="p-4 pt-1 border-t border-surface-border">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center pt-2">
+          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+            <div class="text-[10px] text-slate-400 font-mono uppercase">1 Semana</div>
+            <div id="ret-1w" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+            <div class="text-[10px] text-slate-400 font-mono uppercase">1 Mes</div>
+            <div id="ret-1m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+            <div class="text-[10px] text-slate-400 font-mono uppercase">3 Meses</div>
+            <div id="ret-3m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+            <div class="text-[10px] text-slate-400 font-mono uppercase">6 Meses</div>
+            <div id="ret-6m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+            <div class="text-[10px] text-slate-400 font-mono uppercase">1 Año</div>
+            <div id="ret-1y" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+          </div>
+          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+            <div class="text-[10px] text-slate-400 font-mono uppercase">YTD</div>
+            <div id="ret-ytd" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
     <!-- MONTHLY TABLE -->
     <div class="panel-card rounded-lg p-5">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="text-sm font-semibold text-white tracking-wide">Rendimientos Mensuales Consolidados (%)</h2>
-          <p class="text-xs text-slate-400 font-mono mt-0.5">Matriz de rentabilidad porcentual neta y cierre YTD</p>
-        </div>
+      <div class="mb-4">
+        <h2 class="text-sm font-semibold text-white tracking-wide">Rendimientos Mensuales Consolidados (%)</h2>
+        <p class="text-xs text-slate-400 font-mono mt-0.5">Matriz de rentabilidad mensual neta y balance YTD</p>
       </div>
       
       <div class="overflow-x-auto">
         <table class="w-full text-xs font-mono border-collapse min-w-[720px]">
           <thead>
-            <tr class="border-b border-white/[0.08] text-slate-400 text-center">
-              <th class="py-2.5 px-3 text-left font-medium">AÑO</th>
+            <tr class="border-b border-white/[0.06] text-slate-400 text-center">
+              <th class="py-2 px-3 text-left font-medium">AÑO</th>
               <th class="font-medium">ENE</th><th class="font-medium">FEB</th><th class="font-medium">MAR</th>
               <th class="font-medium">ABR</th><th class="font-medium">MAY</th><th class="font-medium">JUN</th>
               <th class="font-medium">JUL</th><th class="font-medium">AGO</th><th class="font-medium">SEP</th>
               <th class="font-medium">OCT</th><th class="font-medium">NOV</th><th class="font-medium">DIC</th>
-              <th class="py-2.5 px-3 text-right bg-white/[0.02] font-semibold text-slate-300">YTD</th>
+              <th class="py-2 px-3 text-right bg-white/[0.02] font-semibold text-slate-300">YTD</th>
             </tr>
           </thead>
-          <tbody id="monthly-table-body" class="divide-y divide-white/[0.04]">
+          <tbody id="monthly-table-body" class="divide-y divide-white/[0.03]">
             <!-- Injected by JS -->
           </tbody>
         </table>
@@ -288,8 +293,8 @@
     <!-- UNDERWATER DRAWDOWN -->
     <div class="panel-card rounded-lg p-5">
       <h2 class="text-sm font-semibold text-white tracking-wide">Curva de Retroceso Submarino (Underwater Drawdown %)</h2>
-      <p class="text-xs text-slate-400 font-mono mt-0.5 mb-4">Medición de la distancia porcentual respecto al último máximo histórico alcanzado</p>
-      <div class="h-36 w-full">
+      <p class="text-xs text-slate-400 font-mono mt-0.5 mb-4">Magnitud porcentual de retroceso desde el último máximo histórico</p>
+      <div class="h-32 w-full">
         <canvas id="drawdownChart"></canvas>
       </div>
     </div>
@@ -299,7 +304,7 @@
       <h2 class="text-sm font-semibold text-white tracking-wide mb-3">Auditoría de Liquidaciones Recientes</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-xs font-mono text-left">
-          <thead class="border-b border-white/[0.08] text-slate-400">
+          <thead class="border-b border-white/[0.06] text-slate-400">
             <tr>
               <th class="py-2 font-medium">FECHA</th>
               <th class="py-2 font-medium">RETORNO ACUM</th>
@@ -308,7 +313,7 @@
               <th class="py-2 font-medium">S&P 500 ACUM</th>
             </tr>
           </thead>
-          <tbody id="history-table-body" class="divide-y divide-white/[0.03] text-slate-300">
+          <tbody id="history-table-body" class="divide-y divide-white/[0.02] text-slate-300">
             <!-- Injected by JS -->
           </tbody>
         </table>
@@ -317,7 +322,7 @@
 
   </main>
 
-  <footer class="max-w-7xl mx-auto px-4 mt-10 text-center text-xs text-slate-400 font-mono">
+  <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-slate-500 font-mono">
     NScheelje Strategy • Autonomous Quantitative Execution System
   </footer>
 
@@ -587,8 +592,8 @@
       const retBench = data.map(d => ((d.benchmark_nav - baseBench) / baseBench) * 100);
       const ddData = data.map(d => d.drawdown_pct);
 
-      const stratGradient = perfCtx.createLinearGradient(0, 0, 0, 340);
-      stratGradient.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
+      const stratGradient = perfCtx.createLinearGradient(0, 0, 0, 460);
+      stratGradient.addColorStop(0, 'rgba(16, 185, 129, 0.16)');
       stratGradient.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
 
       perfChart = new Chart(perfCtx, {
@@ -627,7 +632,7 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#0D111A',
+              backgroundColor: '#0B0F17',
               borderColor: 'rgba(255, 255, 255, 0.1)',
               borderWidth: 1,
               titleFont: { family: 'JetBrains Mono', size: 11 },
@@ -647,11 +652,11 @@
           },
           scales: {
             x: {
-              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              grid: { color: 'rgba(255, 255, 255, 0.03)' },
               ticks: { color: '#64748B', font: { family: 'JetBrains Mono', size: 10 } }
             },
             y: {
-              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              grid: { color: 'rgba(255, 255, 255, 0.03)' },
               ticks: {
                 color: '#64748B',
                 font: { family: 'JetBrains Mono', size: 10 },
@@ -662,7 +667,7 @@
         }
       });
 
-      const ddGradient = ddCtx.createLinearGradient(0, 0, 0, 140);
+      const ddGradient = ddCtx.createLinearGradient(0, 0, 0, 130);
       ddGradient.addColorStop(0, 'rgba(244, 63, 94, 0.02)');
       ddGradient.addColorStop(1, 'rgba(244, 63, 94, 0.20)');
 
@@ -689,7 +694,7 @@
             x: { display: false },
             y: {
               max: 0,
-              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              grid: { color: 'rgba(255, 255, 255, 0.03)' },
               ticks: {
                 color: '#64748B',
                 font: { family: 'JetBrains Mono', size: 10 },
@@ -759,7 +764,7 @@
         const tr = document.createElement('tr');
         tr.className = "text-center";
 
-        let html = `<td class="py-2.5 px-3 text-left font-semibold text-slate-200">${year}</td>`;
+        let html = `<td class="py-2 px-3 text-left font-semibold text-slate-200">${year}</td>`;
 
         for (let m = 0; m < 12; m++) {
           const currentNav = years[year][m];
@@ -769,18 +774,18 @@
             const mRet = ((currentNav - prevMonthNav) / prevMonthNav) * 100;
             const sign = mRet > 0 ? '+' : '';
             const colorClass = mRet > 0 ? 'text-emerald-400 font-medium' : (mRet < 0 ? 'text-rose-400 font-medium' : 'text-slate-400');
-            html += `<td class="py-2.5 num-tabular ${colorClass}">${sign}${mRet.toFixed(2)}%</td>`;
+            html += `<td class="py-2 num-tabular ${colorClass}">${sign}${mRet.toFixed(2)}%</td>`;
             prevMonthNav = currentNav;
             lastNavSeenInYear = currentNav;
           }
         }
 
-        let ytdHtml = `<td class="py-2.5 px-3 text-right bg-white/[0.02] text-slate-500 font-normal">-</td>`;
+        let ytdHtml = `<td class="py-2 px-3 text-right bg-white/[0.02] text-slate-500 font-normal">-</td>`;
         if (lastNavSeenInYear && yearNavStart) {
           const ytdRet = ((lastNavSeenInYear - yearNavStart) / yearNavStart) * 100;
           const ytdSign = ytdRet > 0 ? '+' : '';
           const ytdColor = ytdRet >= 0 ? 'text-emerald-400' : 'text-rose-400';
-          ytdHtml = `<td class="py-2.5 px-3 text-right bg-white/[0.02] font-semibold num-tabular ${ytdColor}">${ytdSign}${ytdRet.toFixed(2)}%</td>`;
+          ytdHtml = `<td class="py-2 px-3 text-right bg-white/[0.02] font-semibold num-tabular ${ytdColor}">${ytdSign}${ytdRet.toFixed(2)}%</td>`;
         }
 
         html += ytdHtml;
