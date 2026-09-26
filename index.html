@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NScheelje Strategy | Cuantitativo Multi-Asset</title>
+  <title>NScheelje Strategy | Quantitative Track-Record</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
@@ -11,14 +14,23 @@
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
           colors: {
-            brand: {
-              bg: '#0B0F19',
-              card: '#111827',
-              border: '#1F2937',
-              accent: '#10B981',
-              blue: '#3B82F6',
-              danger: '#EF4444'
+            surface: {
+              base: '#07090E',
+              card: '#0D111A',
+              cardHover: '#111724',
+              border: 'rgba(255, 255, 255, 0.07)',
+              borderSubtle: 'rgba(255, 255, 255, 0.04)',
+            },
+            accent: {
+              emerald: '#10B981',
+              emeraldMuted: '#059669',
+              blue: '#38BDF8',
+              rose: '#F43F5E',
             }
           }
         }
@@ -26,163 +38,216 @@
     }
   </script>
   <style>
-    body { background-color: #0B0F19; color: #E5E7EB; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .metric-card { background: #111827; border: 1px solid #1F2937; border-radius: 0.75rem; padding: 1.25rem; }
-    .tf-btn { transition: all 0.2s; }
-    .tf-btn.active { background-color: rgba(16, 185, 129, 0.2); color: #34D399; border-color: rgba(16, 185, 129, 0.4); }
+    body {
+      background-color: #07090E;
+      color: #E2E8F0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .num-tabular {
+      font-feature-settings: "tnum" 1, "cv05" 1;
+      letter-spacing: -0.02em;
+    }
+    .panel-card {
+      background: linear-gradient(180deg, rgba(16, 22, 34, 0.8) 0%, rgba(13, 17, 26, 0.95) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+    }
+    .hairline-border {
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .tf-btn {
+      transition: all 0.15s ease-in-out;
+    }
+    .tf-btn.active {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07090E;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: 3px;
+    }
   </style>
 </head>
-<body class="min-h-screen pb-16">
+<body class="min-h-screen pb-20 selection:bg-emerald-500/20 selection:text-emerald-300">
 
-  <!-- HEADER -->
-  <header class="border-b border-brand-border bg-brand-card/50 backdrop-blur sticky top-0 z-50">
+  <!-- TOP APP BAR -->
+  <header class="border-b border-surface-border bg-surface-base/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg">
-          N
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-8 h-8 rounded border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center font-mono font-bold text-sm text-emerald-400">
+          NS
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-bold text-lg tracking-wider text-white">NSCHEELJE STRATEGY</h1>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono uppercase tracking-widest font-semibold">Track-Record</span>
+            <h1 class="font-semibold text-sm tracking-wide text-white">NSCHEELJE STRATEGY</h1>
+            <span class="inline-flex items-center gap-1 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-2 py-0.5 rounded font-mono uppercase tracking-wider font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Verified
+            </span>
           </div>
-          <p class="text-xs text-gray-400 font-mono">Multi-Asset Quantitative Portfolio</p>
+          <p class="text-[11px] text-slate-400 font-mono">Systematic Quantitative Portfolio</p>
         </div>
       </div>
       
-      <!-- AUDITORÍA, FECHA Y ÚLTIMA SESIÓN -->
-      <div class="flex items-center gap-3 sm:gap-4 text-right">
+      <div class="flex items-center gap-3 sm:gap-6 text-right">
         <div>
-          <span class="text-[10px] sm:text-xs text-gray-500 block uppercase tracking-wider">Último Cierre</span>
+          <span class="text-[10px] uppercase font-mono tracking-widest text-slate-400 block">Último Cierre</span>
           <div class="flex items-center gap-1.5 justify-end">
-            <span id="last-date" class="text-xs sm:text-sm font-mono text-gray-200 font-semibold">Cargando...</span>
-            <span id="header-daily" class="text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">--%</span>
+            <span id="last-date" class="text-xs font-mono num-tabular text-slate-200 font-medium">--</span>
+            <span id="header-daily" class="text-[11px] font-mono num-tabular font-medium px-1.5 py-0.5 rounded border border-transparent">--%</span>
           </div>
         </div>
+
+        <div class="h-7 w-[1px] bg-white/10 hidden sm:block"></div>
+
         <a href="https://github.com/Stronghand42/portfolio-data/commits/main/nav_history.csv" 
            target="_blank" 
            rel="noopener noreferrer"
-           title="Verificación criptográfica de commits en GitHub"
-           class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-gray-800/80 hover:bg-gray-700 text-gray-200 border border-gray-700 hover:border-emerald-500 transition-all">
+           title="Auditoría criptográfica del historial en GitHub"
+           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono text-slate-300 bg-surface-card border border-surface-border hover:border-emerald-500/40 hover:text-white transition-all">
           <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
           </svg>
-          <span class="hidden sm:inline">Auditoría</span> SHA
+          <span>Registro SHA</span>
         </a>
       </div>
+
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+  <!-- DASHBOARD WRAPPER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-7 space-y-6">
 
-    <!-- KPI PRINCIPALES (5 COLUMNAS ADAPTABLES) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    <!-- KPI ROW (5 CARDS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
       
-      <!-- 1. RETORNO TOTAL (SINCE INCEPTION) -->
-      <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Retorno Total (Since Inception)</div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="kpi-cum" class="text-3xl font-bold font-mono">--%</span>
+      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Retorno Total</div>
+        <div class="mt-2.5 flex items-baseline gap-2">
+          <span id="kpi-cum" class="text-2xl font-bold font-mono num-tabular tracking-tight">--%</span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Inception: <span id="inception-date" class="text-gray-400 font-mono">--</span></div>
+        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>Inception</span>
+          <span id="inception-date" class="text-slate-300">--</span>
+        </div>
       </div>
 
-      <!-- 2. CAGR (ANUALIZADO) VS S&P 500 -->
-      <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">CAGR (Compuesto)</div>
-        <div class="mt-2 flex items-baseline gap-3">
-          <span id="kpi-cagr" class="text-3xl font-bold font-mono text-emerald-400">--</span>
-          <span class="text-xs text-gray-400">S&P: <span id="kpi-bench-cagr" class="font-mono font-semibold text-blue-400">--</span></span>
+      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">CAGR Compuesto</div>
+        <div class="mt-2.5 flex items-baseline gap-2">
+          <span id="kpi-cagr" class="text-2xl font-bold font-mono num-tabular tracking-tight text-emerald-400">--</span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Crecimiento anual compuesto</div>
+        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>S&P 500:</span>
+          <span id="kpi-bench-cagr" class="text-slate-300 num-tabular">--</span>
+        </div>
       </div>
 
-      <!-- 3. VOLATILIDAD ANUALIZADA VS S&P 500 -->
-      <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Volatilidad (Anualizada)</div>
-        <div class="mt-2 flex items-baseline gap-3">
-          <span id="kpi-vol" class="text-3xl font-bold font-mono text-white">--</span>
-          <span class="text-xs text-gray-400">S&P: <span id="kpi-bench-vol" class="font-mono font-semibold text-blue-400">--</span></span>
+      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Volatilidad (σ × √252)</div>
+        <div class="mt-2.5 flex items-baseline gap-2">
+          <span id="kpi-vol" class="text-2xl font-bold font-mono num-tabular tracking-tight text-slate-200">--</span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Desviación estándar (σ × √252)</div>
+        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>S&P 500:</span>
+          <span id="kpi-bench-vol" class="text-slate-300 num-tabular">--</span>
+        </div>
       </div>
 
-      <!-- 4. SHARPE RATIO (vs S&P 500) -->
-      <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Sharpe Ratio</div>
-        <div class="mt-2 flex items-baseline gap-3">
-          <span id="kpi-sharpe" class="text-3xl font-bold font-mono text-emerald-400">--</span>
-          <span class="text-xs text-gray-400">S&P: <span id="kpi-bench-sharpe" class="font-mono font-semibold text-blue-400">--</span></span>
+      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Sharpe Ratio</div>
+        <div class="mt-2.5 flex items-baseline gap-2">
+          <span id="kpi-sharpe" class="text-2xl font-bold font-mono num-tabular tracking-tight text-emerald-400">--</span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Retorno ajustado por riesgo (Rf=0%)</div>
+        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>S&P 500:</span>
+          <span id="kpi-bench-sharpe" class="text-slate-300 num-tabular">--</span>
+        </div>
       </div>
 
-      <!-- 5. DRAWDOWN (MÁXIMO / ACTUAL) -->
-      <div class="metric-card flex flex-col justify-between">
-        <div class="text-xs font-semibold uppercase tracking-wider text-gray-400">Drawdown (Max / Act)</div>
-        <div class="mt-2 flex items-baseline gap-2">
-          <span id="kpi-max-dd" class="text-3xl font-bold font-mono text-rose-500">--%</span>
-          <span class="text-xs text-gray-400">/ Act:</span>
-          <span id="kpi-dd" class="text-base font-bold font-mono text-rose-400">--%</span>
+      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Drawdown (Max / Act)</div>
+        <div class="mt-2.5 flex items-baseline gap-2">
+          <span id="kpi-max-dd" class="text-2xl font-bold font-mono num-tabular tracking-tight text-rose-500">--%</span>
+          <span class="text-xs text-slate-400 font-mono">/</span>
+          <span id="kpi-dd" class="text-sm font-bold font-mono num-tabular text-rose-400">--%</span>
         </div>
-        <div class="mt-2 text-xs text-gray-500">Peor caída vs. retroceso actual</div>
+        <div class="mt-2.5 pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>Trough to Peak</span>
+          <span class="text-slate-300">ATH</span>
+        </div>
       </div>
 
     </div>
 
-    <!-- RETORNOS POR PERÍODOS MÓVILES (TRAILING RETURNS) -->
-    <div class="metric-card">
-      <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Rendimiento por Períodos Móviles (Trailing Returns)</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
-          <div class="text-[11px] text-gray-400 font-medium">1 Semana</div>
-          <div id="ret-1w" class="text-lg font-mono font-bold mt-1">--</div>
+    <!-- TRAILING RETURNS -->
+    <div class="panel-card rounded-lg p-4">
+      <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-3">Rendimiento por Períodos Móviles (Trailing Returns)</div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center">
+        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
+          <div class="text-[10px] text-slate-400 font-mono uppercase">1 Semana</div>
+          <div id="ret-1w" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
         </div>
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
-          <div class="text-[11px] text-gray-400 font-medium">1 Mes</div>
-          <div id="ret-1m" class="text-lg font-mono font-bold mt-1">--</div>
+        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
+          <div class="text-[10px] text-slate-400 font-mono uppercase">1 Mes</div>
+          <div id="ret-1m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
         </div>
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
-          <div class="text-[11px] text-gray-400 font-medium">3 Meses</div>
-          <div id="ret-3m" class="text-lg font-mono font-bold mt-1">--</div>
+        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
+          <div class="text-[10px] text-slate-400 font-mono uppercase">3 Meses</div>
+          <div id="ret-3m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
         </div>
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
-          <div class="text-[11px] text-gray-400 font-medium">6 Meses</div>
-          <div id="ret-6m" class="text-lg font-mono font-bold mt-1">--</div>
+        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
+          <div class="text-[10px] text-slate-400 font-mono uppercase">6 Meses</div>
+          <div id="ret-6m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
         </div>
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
-          <div class="text-[11px] text-gray-400 font-medium">1 Año</div>
-          <div id="ret-1y" class="text-lg font-mono font-bold mt-1">--</div>
+        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
+          <div class="text-[10px] text-slate-400 font-mono uppercase">1 Año</div>
+          <div id="ret-1y" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
         </div>
-        <div class="bg-gray-900/60 p-3 rounded-lg border border-gray-800">
-          <div class="text-[11px] text-gray-400 font-medium">YTD</div>
-          <div id="ret-ytd" class="text-lg font-mono font-bold mt-1">--</div>
+        <div class="bg-black/30 p-2.5 rounded border border-white/[0.04]">
+          <div class="text-[10px] text-slate-400 font-mono uppercase">YTD</div>
+          <div id="ret-ytd" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
         </div>
       </div>
     </div>
 
-    <!-- GRÁFICO PRINCIPAL EN RENDIMIENTO PORCENTUAL DIRECTO (%) -->
-    <div class="metric-card">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+    <!-- PRIMARY PERFORMANCE CHART -->
+    <div class="panel-card rounded-lg p-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-3 border-b border-white/[0.05]">
         <div>
-          <h2 class="text-base font-bold text-white tracking-wide">Curva de Rendimiento Comparativo (%)</h2>
-          <p class="text-xs text-gray-400">Retorno neto acumulado en porcentaje directo vs. S&P 500 (VOO)</p>
+          <h2 class="text-sm font-semibold text-white tracking-wide">Rendimiento Histórico Acumulado Net-of-Fees (%)</h2>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">Retorno auditado con rebalanceo automático vs. Benchmark de referencia</p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2">
-          <div class="flex items-center gap-1 bg-gray-900/80 p-1 rounded-lg border border-gray-800 text-xs font-mono">
-            <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1S</button>
-            <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1M</button>
-            <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">3M</button>
-            <button onclick="changeTimeframe('6M')" id="btn-6M" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">6M</button>
-            <button onclick="changeTimeframe('1Y')" id="btn-1Y" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">1A</button>
-            <button onclick="changeTimeframe('YTD')" id="btn-YTD" class="tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent">YTD</button>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-1 bg-black/40 p-1 rounded border border-white/[0.06] text-xs font-mono">
+            <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1S</button>
+            <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1M</button>
+            <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">3M</button>
+            <button onclick="changeTimeframe('6M')" id="btn-6M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">6M</button>
+            <button onclick="changeTimeframe('1Y')" id="btn-1Y" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1A</button>
+            <button onclick="changeTimeframe('YTD')" id="btn-YTD" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">YTD</button>
             <button onclick="changeTimeframe('ALL')" id="btn-ALL" class="tf-btn px-2.5 py-1 rounded active border">TODO</button>
           </div>
           
-          <div class="hidden sm:flex items-center gap-4 text-xs font-mono ml-2">
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-400"></span> NScheelje Strategy</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> S&P 500 (VOO)</span>
+          <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
+            <span class="flex items-center gap-1.5 text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> NScheelje Strategy
+            </span>
+            <span class="flex items-center gap-1.5 text-slate-300">
+              <span class="w-2.5 h-0.5 bg-sky-400"></span> S&P 500 (VOO)
+            </span>
           </div>
         </div>
       </div>
@@ -192,53 +257,59 @@
       </div>
     </div>
 
-    <!-- TABLA DE RETORNOS MENSUALES -->
-    <div class="metric-card">
-      <h2 class="text-base font-bold text-white tracking-wide mb-1">Rendimientos Mensuales Históricos (%)</h2>
-      <p class="text-xs text-gray-400 mb-4">Matriz de rentabilidad mensual neta auditada y balance anual</p>
+    <!-- MONTHLY TABLE -->
+    <div class="panel-card rounded-lg p-5">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-sm font-semibold text-white tracking-wide">Rendimientos Mensuales Consolidados (%)</h2>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">Matriz de rentabilidad porcentual neta y cierre YTD</p>
+        </div>
+      </div>
       
       <div class="overflow-x-auto">
-        <table class="w-full text-xs font-mono border-collapse min-w-[700px]">
+        <table class="w-full text-xs font-mono border-collapse min-w-[720px]">
           <thead>
-            <tr class="border-b border-gray-800 text-gray-400 text-center">
-              <th class="py-2.5 px-3 text-left">AÑO</th>
-              <th>ENE</th><th>FEB</th><th>MAR</th><th>ABR</th><th>MAY</th><th>JUN</th>
-              <th>JUL</th><th>AGO</th><th>SEP</th><th>OCT</th><th>NOV</th><th>DIC</th>
-              <th class="py-2.5 px-3 text-right bg-gray-900/40">YTD</th>
+            <tr class="border-b border-white/[0.08] text-slate-400 text-center">
+              <th class="py-2.5 px-3 text-left font-medium">AÑO</th>
+              <th class="font-medium">ENE</th><th class="font-medium">FEB</th><th class="font-medium">MAR</th>
+              <th class="font-medium">ABR</th><th class="font-medium">MAY</th><th class="font-medium">JUN</th>
+              <th class="font-medium">JUL</th><th class="font-medium">AGO</th><th class="font-medium">SEP</th>
+              <th class="font-medium">OCT</th><th class="font-medium">NOV</th><th class="font-medium">DIC</th>
+              <th class="py-2.5 px-3 text-right bg-white/[0.02] font-semibold text-slate-300">YTD</th>
             </tr>
           </thead>
-          <tbody id="monthly-table-body">
-            <!-- Filas inyectadas por JS -->
+          <tbody id="monthly-table-body" class="divide-y divide-white/[0.04]">
+            <!-- Injected by JS -->
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- GRÁFICO DE UNDERWATER DRAWDOWN -->
-    <div class="metric-card">
-      <h2 class="text-base font-bold text-white tracking-wide mb-1">Underwater Drawdown (%)</h2>
-      <p class="text-xs text-gray-400 mb-4">Magnitud del retroceso porcentual desde máximos históricos acumulados</p>
-      <div class="h-44 w-full">
+    <!-- UNDERWATER DRAWDOWN -->
+    <div class="panel-card rounded-lg p-5">
+      <h2 class="text-sm font-semibold text-white tracking-wide">Curva de Retroceso Submarino (Underwater Drawdown %)</h2>
+      <p class="text-xs text-slate-400 font-mono mt-0.5 mb-4">Medición de la distancia porcentual respecto al último máximo histórico alcanzado</p>
+      <div class="h-36 w-full">
         <canvas id="drawdownChart"></canvas>
       </div>
     </div>
 
-    <!-- AUDITORÍA DE ÚLTIMAS SESIONES -->
-    <div class="metric-card">
-      <h2 class="text-base font-bold text-white tracking-wide mb-3">Historial Reciente de Liquidaciones</h2>
+    <!-- RECENT SETTLEMENTS -->
+    <div class="panel-card rounded-lg p-5">
+      <h2 class="text-sm font-semibold text-white tracking-wide mb-3">Auditoría de Liquidaciones Recientes</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-xs font-mono text-left">
-          <thead class="border-b border-gray-800 text-gray-400">
+          <thead class="border-b border-white/[0.08] text-slate-400">
             <tr>
-              <th class="py-2">FECHA</th>
-              <th class="py-2">RETORNO ACUM</th>
-              <th class="py-2">RETORNO DÍA</th>
-              <th class="py-2">DRAWDOWN</th>
-              <th class="py-2">S&P 500 ACUM</th>
+              <th class="py-2 font-medium">FECHA</th>
+              <th class="py-2 font-medium">RETORNO ACUM</th>
+              <th class="py-2 font-medium">RETORNO SESIÓN</th>
+              <th class="py-2 font-medium">DRAWDOWN</th>
+              <th class="py-2 font-medium">S&P 500 ACUM</th>
             </tr>
           </thead>
-          <tbody id="history-table-body" class="divide-y divide-gray-800/40 text-gray-300">
-            <!-- Filas inyectadas por JS -->
+          <tbody id="history-table-body" class="divide-y divide-white/[0.03] text-slate-300">
+            <!-- Injected by JS -->
           </tbody>
         </table>
       </div>
@@ -246,11 +317,10 @@
 
   </main>
 
-  <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-gray-500 font-mono">
-    NScheelje Strategy • Sistema Cuantitativo Multi-Asset
+  <footer class="max-w-7xl mx-auto px-4 mt-10 text-center text-xs text-slate-400 font-mono">
+    NScheelje Strategy • Autonomous Quantitative Execution System
   </footer>
 
-  <!-- LÓGICA JAVASCRIPT INSTITUCIONAL -->
   <script>
     let globalPortfolioData = [];
     let perfChart = null;
@@ -259,7 +329,7 @@
 
     async function loadPortfolioData() {
       try {
-        const response = await fetch('nav_history.csv?v=' + new Date().getTime());
+        const response = await fetch('nav_history.csv?v=' + Date.now());
         if (!response.ok) throw new Error("No se pudo cargar el archivo CSV.");
         const text = await response.text();
 
@@ -300,7 +370,7 @@
         updateDashboard(data);
         renderCharts(data);
       } catch (err) {
-        console.error("Error al renderizar el dashboard:", err);
+        console.error(err);
       }
     }
 
@@ -391,34 +461,29 @@
       const first = data[0];
       const last = data[data.length - 1];
       
-      // Encabezado
       document.getElementById('last-date').innerText = last.date;
       document.getElementById('inception-date').innerText = first.date;
 
-      // Rendimiento última sesión en el header
       const headerDaily = document.getElementById('header-daily');
       if (headerDaily) {
         const sign = last.daily_return_pct >= 0 ? '+' : '';
         headerDaily.innerText = `${sign}${last.daily_return_pct.toFixed(2)}%`;
-        headerDaily.className = `text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded ${last.daily_return_pct >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`;
+        headerDaily.className = `text-[11px] font-mono num-tabular font-medium px-1.5 py-0.5 rounded ${last.daily_return_pct >= 0 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25' : 'bg-rose-500/15 text-rose-400 border border-rose-500/25'}`;
       }
 
-      // Card 1: Retorno Total (Since Inception)
       const cumElem = document.getElementById('kpi-cum');
       cumElem.innerText = `${last.cum_ret_pct >= 0 ? '+' : ''}${last.cum_ret_pct.toFixed(2)}%`;
-      cumElem.className = `text-3xl font-bold font-mono ${last.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+      cumElem.className = `text-2xl font-bold font-mono num-tabular tracking-tight ${last.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-      // Card 2: CAGR
       const cagrVal = calculateCAGR(data, false);
       const benchCagrVal = calculateCAGR(data, true);
       const cagrElem = document.getElementById('kpi-cagr');
       cagrElem.innerText = cagrVal;
-      if (cagrVal.startsWith('+')) cagrElem.className = "text-3xl font-bold font-mono text-emerald-400";
-      else if (cagrVal.startsWith('-')) cagrElem.className = "text-3xl font-bold font-mono text-rose-400";
-      else cagrElem.className = "text-3xl font-bold font-mono text-gray-300";
+      if (cagrVal.startsWith('+')) cagrElem.className = "text-2xl font-bold font-mono num-tabular tracking-tight text-emerald-400";
+      else if (cagrVal.startsWith('-')) cagrElem.className = "text-2xl font-bold font-mono num-tabular tracking-tight text-rose-400";
+      else cagrElem.className = "text-2xl font-bold font-mono num-tabular tracking-tight text-slate-300";
       document.getElementById('kpi-bench-cagr').innerText = benchCagrVal;
 
-      // Retornos diarios para estadísticas
       const stratDailyReturns = data.slice(1).map(d => d.daily_return_pct / 100);
       const benchDailyReturns = [];
       for (let i = 1; i < data.length; i++) {
@@ -426,28 +491,24 @@
         benchDailyReturns.push(rBench);
       }
 
-      // Card 3: Volatilidad Anualizada
       document.getElementById('kpi-vol').innerText = calculateVolatility(stratDailyReturns);
       document.getElementById('kpi-bench-vol').innerText = calculateVolatility(benchDailyReturns);
 
-      // Card 4: Sharpe Ratio
       document.getElementById('kpi-sharpe').innerText = calculateSharpe(stratDailyReturns);
       document.getElementById('kpi-bench-sharpe').innerText = calculateSharpe(benchDailyReturns);
 
-      // Card 5: Drawdown
       let maxDD = 0;
       data.forEach(d => { if (d.drawdown_pct < maxDD) maxDD = d.drawdown_pct; });
       document.getElementById('kpi-max-dd').innerText = `${maxDD.toFixed(2)}%`;
       document.getElementById('kpi-dd').innerText = `${last.drawdown_pct.toFixed(2)}%`;
 
-      // Trailing Returns
       const styleRet = (elemId, val) => {
         const el = document.getElementById(elemId);
         if (!el) return;
         el.innerText = val;
-        if (val.startsWith('+')) el.className = "text-lg font-mono font-bold mt-1 text-emerald-400";
-        else if (val.startsWith('-')) el.className = "text-lg font-mono font-bold mt-1 text-rose-400";
-        else el.className = "text-lg font-mono font-bold mt-1 text-gray-400";
+        if (val.startsWith('+')) el.className = "text-base font-mono num-tabular font-bold mt-0.5 text-emerald-400";
+        else if (val.startsWith('-')) el.className = "text-base font-mono num-tabular font-bold mt-0.5 text-rose-400";
+        else el.className = "text-base font-mono num-tabular font-bold mt-0.5 text-slate-400";
       };
 
       styleRet('ret-1w', calculateTrailingReturn(data, 7));
@@ -457,10 +518,8 @@
       styleRet('ret-1y', calculateTrailingReturn(data, 365));
       styleRet('ret-ytd', calculateYTD(data));
 
-      // Tabla Mensual
       renderMonthlyTable(data);
 
-      // Historial Reciente (Enfoque en retornos netos %)
       const historyTbody = document.getElementById('history-table-body');
       historyTbody.innerHTML = '';
       const recent = [...data].reverse().slice(0, 8);
@@ -468,11 +527,11 @@
         const tr = document.createElement('tr');
         const benchCum = ((row.benchmark_nav - data[0].benchmark_nav) / data[0].benchmark_nav) * 100;
         tr.innerHTML = `
-          <td class="py-2">${row.date}</td>
-          <td class="py-2 font-bold ${row.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.cum_ret_pct >= 0 ? '+' : ''}${row.cum_ret_pct.toFixed(2)}%</td>
-          <td class="py-2 ${row.daily_return_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.daily_return_pct >= 0 ? '+' : ''}${row.daily_return_pct.toFixed(2)}%</td>
-          <td class="py-2 text-rose-400">${row.drawdown_pct.toFixed(2)}%</td>
-          <td class="py-2 text-gray-400">${benchCum >= 0 ? '+' : ''}${benchCum.toFixed(2)}%</td>
+          <td class="py-2.5 text-slate-300">${row.date}</td>
+          <td class="py-2.5 font-bold num-tabular ${row.cum_ret_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.cum_ret_pct >= 0 ? '+' : ''}${row.cum_ret_pct.toFixed(2)}%</td>
+          <td class="py-2.5 num-tabular ${row.daily_return_pct >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${row.daily_return_pct >= 0 ? '+' : ''}${row.daily_return_pct.toFixed(2)}%</td>
+          <td class="py-2.5 num-tabular text-rose-400">${row.drawdown_pct.toFixed(2)}%</td>
+          <td class="py-2.5 num-tabular text-slate-400">${benchCum >= 0 ? '+' : ''}${benchCum.toFixed(2)}%</td>
         `;
         historyTbody.appendChild(tr);
       });
@@ -506,7 +565,7 @@
         if (id === tf) {
           btn.className = "tf-btn px-2.5 py-1 rounded active border";
         } else {
-          btn.className = "tf-btn px-2.5 py-1 rounded text-gray-400 hover:text-white border border-transparent";
+          btn.className = "tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent";
         }
       });
 
@@ -515,17 +574,22 @@
     }
 
     function renderCharts(data) {
-      const perfCtx = document.getElementById('performanceChart').getContext('2d');
-      const ddCtx = document.getElementById('drawdownChart').getContext('2d');
+      const perfCanvas = document.getElementById('performanceChart');
+      const ddCanvas = document.getElementById('drawdownChart');
+      const perfCtx = perfCanvas.getContext('2d');
+      const ddCtx = ddCanvas.getContext('2d');
 
       const labels = data.map(d => d.date);
       const baseStrat = data[0].nav;
       const baseBench = data[0].benchmark_nav;
 
-      // Retornos acumulados en porcentaje directo (%)
       const retStrat = data.map(d => ((d.nav - baseStrat) / baseStrat) * 100);
       const retBench = data.map(d => ((d.benchmark_nav - baseBench) / baseBench) * 100);
       const ddData = data.map(d => d.drawdown_pct);
+
+      const stratGradient = perfCtx.createLinearGradient(0, 0, 0, 340);
+      stratGradient.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
+      stratGradient.addColorStop(1, 'rgba(16, 185, 129, 0.00)');
 
       perfChart = new Chart(perfCtx, {
         type: 'line',
@@ -536,20 +600,22 @@
               label: 'NScheelje Strategy',
               data: retStrat,
               borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              backgroundColor: stratGradient,
               borderWidth: 2,
               fill: true,
-              tension: 0.1,
-              pointRadius: labels.length > 30 ? 0 : 3
+              tension: 0.08,
+              pointRadius: labels.length > 40 ? 0 : 2.5,
+              pointHoverRadius: 4,
+              pointBackgroundColor: '#10B981'
             },
             {
               label: 'S&P 500 (VOO)',
               data: retBench,
-              borderColor: '#3B82F6',
-              borderDash: [4, 4],
-              borderWidth: 1.5,
+              borderColor: '#38BDF8',
+              borderDash: [3, 3],
+              borderWidth: 1.25,
               fill: false,
-              tension: 0.1,
+              tension: 0.08,
               pointRadius: 0
             }
           ]
@@ -561,6 +627,13 @@
           plugins: {
             legend: { display: false },
             tooltip: {
+              backgroundColor: '#0D111A',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1,
+              titleFont: { family: 'JetBrains Mono', size: 11 },
+              bodyFont: { family: 'JetBrains Mono', size: 11 },
+              padding: 10,
+              displayColors: true,
               callbacks: {
                 label: function(context) {
                   let label = context.dataset.label || '';
@@ -573,18 +646,25 @@
             }
           },
           scales: {
-            x: { grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' } } },
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              ticks: { color: '#64748B', font: { family: 'JetBrains Mono', size: 10 } }
+            },
             y: {
-              grid: { color: '#1F2937' },
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
               ticks: {
-                color: '#9CA3AF',
-                font: { family: 'monospace' },
+                color: '#64748B',
+                font: { family: 'JetBrains Mono', size: 10 },
                 callback: v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%'
               }
             }
           }
         }
       });
+
+      const ddGradient = ddCtx.createLinearGradient(0, 0, 0, 140);
+      ddGradient.addColorStop(0, 'rgba(244, 63, 94, 0.02)');
+      ddGradient.addColorStop(1, 'rgba(244, 63, 94, 0.20)');
 
       ddChart = new Chart(ddCtx, {
         type: 'line',
@@ -593,11 +673,11 @@
           datasets: [{
             label: 'Drawdown (%)',
             data: ddData,
-            borderColor: '#EF4444',
-            backgroundColor: 'rgba(239, 68, 68, 0.15)',
-            borderWidth: 1.5,
+            borderColor: '#F43F5E',
+            backgroundColor: ddGradient,
+            borderWidth: 1.25,
             fill: true,
-            tension: 0.1,
+            tension: 0.08,
             pointRadius: 0
           }]
         },
@@ -607,7 +687,15 @@
           plugins: { legend: { display: false } },
           scales: {
             x: { display: false },
-            y: { max: 0, grid: { color: '#1F2937' }, ticks: { color: '#9CA3AF', font: { family: 'monospace' }, callback: v => v + '%' } }
+            y: {
+              max: 0,
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              ticks: {
+                color: '#64748B',
+                font: { family: 'JetBrains Mono', size: 10 },
+                callback: v => v + '%'
+              }
+            }
           }
         }
       });
@@ -617,7 +705,6 @@
       if (!perfChart || !ddChart) return;
       const labels = filtered.map(d => d.date);
 
-      // El punto inicial del período seleccionado arranca exactamente en 0.00%
       const baseStrat = filtered[0].nav;
       const baseBench = filtered[0].benchmark_nav;
 
@@ -627,7 +714,7 @@
 
       perfChart.data.labels = labels;
       perfChart.data.datasets[0].data = retStrat;
-      perfChart.data.datasets[0].pointRadius = labels.length > 30 ? 0 : 3;
+      perfChart.data.datasets[0].pointRadius = labels.length > 40 ? 0 : 2.5;
       perfChart.data.datasets[1].data = retBench;
       perfChart.update();
 
@@ -670,30 +757,30 @@
         let lastNavSeenInYear = null;
 
         const tr = document.createElement('tr');
-        tr.className = "border-b border-gray-800/40 text-center";
+        tr.className = "text-center";
 
-        let html = `<td class="py-2.5 px-3 text-left font-bold text-gray-200">${year}</td>`;
+        let html = `<td class="py-2.5 px-3 text-left font-semibold text-slate-200">${year}</td>`;
 
         for (let m = 0; m < 12; m++) {
           const currentNav = years[year][m];
           if (currentNav === null || prevMonthNav === null) {
-            html += `<td class="text-gray-600 font-light">-</td>`;
+            html += `<td class="text-slate-600 font-normal">-</td>`;
           } else {
             const mRet = ((currentNav - prevMonthNav) / prevMonthNav) * 100;
             const sign = mRet > 0 ? '+' : '';
-            const bgClass = mRet > 0 ? 'text-emerald-400 font-semibold' : (mRet < 0 ? 'text-rose-400 font-semibold' : 'text-gray-400');
-            html += `<td class="py-2 ${bgClass}">${sign}${mRet.toFixed(2)}%</td>`;
+            const colorClass = mRet > 0 ? 'text-emerald-400 font-medium' : (mRet < 0 ? 'text-rose-400 font-medium' : 'text-slate-400');
+            html += `<td class="py-2.5 num-tabular ${colorClass}">${sign}${mRet.toFixed(2)}%</td>`;
             prevMonthNav = currentNav;
             lastNavSeenInYear = currentNav;
           }
         }
 
-        let ytdHtml = `<td class="py-2.5 px-3 text-right bg-gray-900/40 text-gray-500 font-light">-</td>`;
+        let ytdHtml = `<td class="py-2.5 px-3 text-right bg-white/[0.02] text-slate-500 font-normal">-</td>`;
         if (lastNavSeenInYear && yearNavStart) {
           const ytdRet = ((lastNavSeenInYear - yearNavStart) / yearNavStart) * 100;
           const ytdSign = ytdRet > 0 ? '+' : '';
           const ytdColor = ytdRet >= 0 ? 'text-emerald-400' : 'text-rose-400';
-          ytdHtml = `<td class="py-2.5 px-3 text-right bg-gray-900/40 font-bold ${ytdColor}">${ytdSign}${ytdRet.toFixed(2)}%</td>`;
+          ytdHtml = `<td class="py-2.5 px-3 text-right bg-white/[0.02] font-semibold num-tabular ${ytdColor}">${ytdSign}${ytdRet.toFixed(2)}%</td>`;
         }
 
         html += ytdHtml;
