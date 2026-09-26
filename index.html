@@ -69,268 +69,322 @@
     }
   </style>
 </head>
-<body class="min-h-screen pb-24 selection:bg-emerald-500/20 selection:text-emerald-300">
+<body class="min-h-screen selection:bg-emerald-500/20 selection:text-emerald-300">
 
-  <!-- TOP APP BAR -->
-  <header class="border-b border-surface-border bg-surface-base/80 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <!-- PANTALLA PREVIA INSTITUCIONAL (SPLASH GATE) -->
+  <div id="gate-screen" class="fixed inset-0 z-[100] bg-[#06080D] flex flex-col items-center justify-center p-6 text-center select-none transition-all duration-700 ease-out">
+    <div class="max-w-md w-full flex flex-col items-center space-y-6">
       
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center font-mono font-bold text-xs text-emerald-400">
-          NS
+      <div class="w-12 h-12 rounded-lg border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center font-mono font-bold text-base text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+        NS
+      </div>
+
+      <div class="space-y-1.5">
+        <div class="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Sistema Operativo Verificado
         </div>
-        <div>
+        <h1 class="text-2xl font-bold tracking-wider text-white pt-2">NSCHEELJE STRATEGY</h1>
+        <p class="text-xs text-slate-400 font-mono tracking-wide">Systematic Quantitative Portfolio • Liquidación EOD</p>
+      </div>
+
+      <div class="w-full pt-4">
+        <button onclick="enterDashboard()" class="w-full group relative inline-flex items-center justify-center px-6 py-3.5 rounded text-xs font-mono font-semibold tracking-widest uppercase text-white bg-surface-card border border-emerald-500/30 hover:border-emerald-500/60 hover:bg-emerald-500/10 transition-all duration-200 shadow-[0_0_25px_rgba(0,0,0,0.8)]">
+          <span class="flex items-center gap-2">
+            Acceder a la Terminal
+            <svg class="w-3.5 h-3.5 text-emerald-400 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-500 font-mono pt-2">
+        Registro inmutable auditado con commits SHA-256
+      </p>
+
+    </div>
+  </div>
+
+  <!-- DASHBOARD PRINCIPAL -->
+  <div id="dashboard-view" class="opacity-0 transition-opacity duration-500 pb-24">
+
+    <!-- TOP APP BAR -->
+    <header class="border-b border-surface-border bg-surface-base/80 backdrop-blur-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center font-mono font-bold text-xs text-emerald-400">
+            NS
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-semibold text-sm tracking-wide text-white">NSCHEELJE STRATEGY</h1>
+              <span class="inline-flex items-center gap-1 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Verified
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-mono">Systematic Quantitative Portfolio</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-4 sm:gap-6 text-right">
+          <div>
+            <span class="text-[10px] uppercase font-mono tracking-widest text-slate-400 block">Último Cierre</span>
+            <div class="flex items-center gap-1.5 justify-end">
+              <span id="last-date" class="text-xs font-mono num-tabular text-slate-300 font-medium">--</span>
+              <span id="header-daily" class="text-[11px] font-mono num-tabular font-medium px-1.5 py-0.5 rounded border border-transparent">--%</span>
+            </div>
+          </div>
+
+          <div class="h-6 w-[1px] bg-white/10 hidden sm:block"></div>
+
+          <a href="https://github.com/Stronghand42/portfolio-data/commits/main/nav_history.csv" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             title="Auditoría criptográfica del historial en GitHub"
+             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono text-slate-300 bg-surface-card border border-surface-border hover:border-emerald-500/40 hover:text-white transition-all">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            <span>Registro SHA</span>
+          </a>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-5">
+
+      <!-- KPI STRIP -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+        
+        <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Retorno Total</span>
+          <div class="my-2">
+            <span id="kpi-cum" class="text-2xl font-bold font-mono num-tabular">--%</span>
+          </div>
+          <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Inception:</span>
+            <span id="inception-date" class="text-slate-300">--</span>
+          </div>
+        </div>
+
+        <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">CAGR Compuesto</span>
+          <div class="my-2">
+            <span id="kpi-cagr" class="text-2xl font-bold font-mono num-tabular text-emerald-400">--</span>
+          </div>
+          <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>S&P 500:</span>
+            <span id="kpi-bench-cagr" class="text-slate-300 num-tabular">--</span>
+          </div>
+        </div>
+
+        <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Volatilidad (σ × √252)</span>
+          <div class="my-2">
+            <span id="kpi-vol" class="text-2xl font-bold font-mono num-tabular text-slate-200">--</span>
+          </div>
+          <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>S&P 500:</span>
+            <span id="kpi-bench-vol" class="text-slate-300 num-tabular">--</span>
+          </div>
+        </div>
+
+        <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Sharpe Ratio</span>
+          <div class="my-2">
+            <span id="kpi-sharpe" class="text-2xl font-bold font-mono num-tabular text-emerald-400">--</span>
+          </div>
+          <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>S&P 500:</span>
+            <span id="kpi-bench-sharpe" class="text-slate-300 num-tabular">--</span>
+          </div>
+        </div>
+
+        <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
+          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Drawdown (Max / Act)</span>
+          <div class="my-2 flex items-baseline gap-1.5">
+            <span id="kpi-max-dd" class="text-2xl font-bold font-mono num-tabular text-rose-500">--%</span>
+            <span class="text-xs text-slate-400 font-mono">/</span>
+            <span id="kpi-dd" class="text-sm font-bold font-mono num-tabular text-rose-400">--%</span>
+          </div>
+          <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Retroceso:</span>
+            <span class="text-slate-300">ATH</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- HERO PERFORMANCE CHART -->
+      <div class="panel-card rounded-lg p-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-3 border-b border-surface-border">
+          <div>
+            <h2 class="text-sm font-semibold text-white tracking-wide">Rendimiento Histórico Acumulado Net-of-Fees (%)</h2>
+            <p class="text-xs text-slate-400 font-mono mt-0.5">Retorno auditado con rebalanceo automático vs. Benchmark</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-1 bg-black/40 p-1 rounded border border-white/[0.05] text-xs font-mono">
+              <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1S</button>
+              <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1M</button>
+              <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">3M</button>
+              <button onclick="changeTimeframe('6M')" id="btn-6M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">6M</button>
+              <button onclick="changeTimeframe('1Y')" id="btn-1Y" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1A</button>
+              <button onclick="changeTimeframe('YTD')" id="btn-YTD" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">YTD</button>
+              <button onclick="changeTimeframe('ALL')" id="btn-ALL" class="tf-btn px-2.5 py-1 rounded active border">TODO</button>
+            </div>
+            
+            <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
+              <span class="flex items-center gap-1.5 text-slate-300">
+                <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> NScheelje Strategy
+              </span>
+              <span class="flex items-center gap-1.5 text-slate-300">
+                <span class="w-2.5 h-0.5 bg-sky-400"></span> S&P 500 (VOO)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-[480px] w-full">
+          <canvas id="performanceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- ACCORDION: TRAILING RETURNS -->
+      <details class="panel-card rounded-lg group">
+        <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors select-none">
           <div class="flex items-center gap-2">
-            <h1 class="font-semibold text-sm tracking-wide text-white">NSCHEELJE STRATEGY</h1>
-            <span class="inline-flex items-center gap-1 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono uppercase tracking-wider">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Verified
-            </span>
+            <span class="text-[11px] font-mono uppercase tracking-wider text-slate-300 font-medium">Rendimiento por Períodos Móviles (Trailing Returns)</span>
+            <span class="text-[10px] text-slate-500 font-mono">[1S, 1M, 3M, 6M, 1A, YTD]</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-mono">Systematic Quantitative Portfolio</p>
-        </div>
-      </div>
-      
-      <div class="flex items-center gap-4 sm:gap-6 text-right">
-        <div>
-          <span class="text-[10px] uppercase font-mono tracking-widest text-slate-400 block">Último Cierre</span>
-          <div class="flex items-center gap-1.5 justify-end">
-            <span id="last-date" class="text-xs font-mono num-tabular text-slate-300 font-medium">--</span>
-            <span id="header-daily" class="text-[11px] font-mono num-tabular font-medium px-1.5 py-0.5 rounded border border-transparent">--%</span>
+          <div class="flex items-center gap-2 text-slate-400 text-xs font-mono">
+            <span class="text-[11px] group-open:hidden">Ver períodos</span>
+            <span class="text-[11px] hidden group-open:inline">Ocultar</span>
+            <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
           </div>
-        </div>
-
-        <div class="h-6 w-[1px] bg-white/10 hidden sm:block"></div>
-
-        <a href="https://github.com/Stronghand42/portfolio-data/commits/main/nav_history.csv" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           title="Auditoría criptográfica del historial en GitHub"
-           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono text-slate-300 bg-surface-card border border-surface-border hover:border-emerald-500/40 hover:text-white transition-all">
-          <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-          </svg>
-          <span>Registro SHA</span>
-        </a>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-5">
-
-    <!-- KPI STRIP -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-      
-      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Retorno Total</span>
-        <div class="my-2">
-          <span id="kpi-cum" class="text-2xl font-bold font-mono num-tabular">--%</span>
-        </div>
-        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>Inception:</span>
-          <span id="inception-date" class="text-slate-300">--</span>
-        </div>
-      </div>
-
-      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">CAGR Compuesto</span>
-        <div class="my-2">
-          <span id="kpi-cagr" class="text-2xl font-bold font-mono num-tabular text-emerald-400">--</span>
-        </div>
-        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>S&P 500:</span>
-          <span id="kpi-bench-cagr" class="text-slate-300 num-tabular">--</span>
-        </div>
-      </div>
-
-      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Volatilidad (σ × √252)</span>
-        <div class="my-2">
-          <span id="kpi-vol" class="text-2xl font-bold font-mono num-tabular text-slate-200">--</span>
-        </div>
-        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>S&P 500:</span>
-          <span id="kpi-bench-vol" class="text-slate-300 num-tabular">--</span>
-        </div>
-      </div>
-
-      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Sharpe Ratio</span>
-        <div class="my-2">
-          <span id="kpi-sharpe" class="text-2xl font-bold font-mono num-tabular text-emerald-400">--</span>
-        </div>
-        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>S&P 500:</span>
-          <span id="kpi-bench-sharpe" class="text-slate-300 num-tabular">--</span>
-        </div>
-      </div>
-
-      <div class="panel-card rounded-lg p-4 flex flex-col justify-between">
-        <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Drawdown (Max / Act)</span>
-        <div class="my-2 flex items-baseline gap-1.5">
-          <span id="kpi-max-dd" class="text-2xl font-bold font-mono num-tabular text-rose-500">--%</span>
-          <span class="text-xs text-slate-400 font-mono">/</span>
-          <span id="kpi-dd" class="text-sm font-bold font-mono num-tabular text-rose-400">--%</span>
-        </div>
-        <div class="pt-2 border-t border-surface-borderSubtle text-[11px] text-slate-400 flex justify-between font-mono">
-          <span>Retroceso:</span>
-          <span class="text-slate-300">ATH</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- HERO PERFORMANCE CHART (MAXIMIZED VIEW) -->
-    <div class="panel-card rounded-lg p-5">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-3 border-b border-surface-border">
-        <div>
-          <h2 class="text-sm font-semibold text-white tracking-wide">Rendimiento Histórico Acumulado Net-of-Fees (%)</h2>
-          <p class="text-xs text-slate-400 font-mono mt-0.5">Retorno auditado con rebalanceo automático vs. Benchmark</p>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3">
-          <div class="flex items-center gap-1 bg-black/40 p-1 rounded border border-white/[0.05] text-xs font-mono">
-            <button onclick="changeTimeframe('1W')" id="btn-1W" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1S</button>
-            <button onclick="changeTimeframe('1M')" id="btn-1M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1M</button>
-            <button onclick="changeTimeframe('3M')" id="btn-3M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">3M</button>
-            <button onclick="changeTimeframe('6M')" id="btn-6M" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">6M</button>
-            <button onclick="changeTimeframe('1Y')" id="btn-1Y" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">1A</button>
-            <button onclick="changeTimeframe('YTD')" id="btn-YTD" class="tf-btn px-2.5 py-1 rounded text-slate-400 hover:text-white border border-transparent">YTD</button>
-            <button onclick="changeTimeframe('ALL')" id="btn-ALL" class="tf-btn px-2.5 py-1 rounded active border">TODO</button>
-          </div>
-          
-          <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
-            <span class="flex items-center gap-1.5 text-slate-300">
-              <span class="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> NScheelje Strategy
-            </span>
-            <span class="flex items-center gap-1.5 text-slate-300">
-              <span class="w-2.5 h-0.5 bg-sky-400"></span> S&P 500 (VOO)
-            </span>
+        </summary>
+        
+        <div class="p-4 pt-1 border-t border-surface-border">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center pt-2">
+            <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+              <div class="text-[10px] text-slate-400 font-mono uppercase">1 Semana</div>
+              <div id="ret-1w" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+            </div>
+            <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+              <div class="text-[10px] text-slate-400 font-mono uppercase">1 Mes</div>
+              <div id="ret-1m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+            </div>
+            <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+              <div class="text-[10px] text-slate-400 font-mono uppercase">3 Meses</div>
+              <div id="ret-3m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+            </div>
+            <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+              <div class="text-[10px] text-slate-400 font-mono uppercase">6 Meses</div>
+              <div id="ret-6m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+            </div>
+            <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+              <div class="text-[10px] text-slate-400 font-mono uppercase">1 Año</div>
+              <div id="ret-1y" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+            </div>
+            <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
+              <div class="text-[10px] text-slate-400 font-mono uppercase">YTD</div>
+              <div id="ret-ytd" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
+            </div>
           </div>
         </div>
-      </div>
+      </details>
 
-      <!-- Aumentado a 480px para máxima claridad -->
-      <div class="h-[480px] w-full">
-        <canvas id="performanceChart"></canvas>
-      </div>
-    </div>
-
-    <!-- ACCORDION: TRAILING RETURNS -->
-    <details class="panel-card rounded-lg group">
-      <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-white/[0.02] transition-colors select-none">
-        <div class="flex items-center gap-2">
-          <span class="text-[11px] font-mono uppercase tracking-wider text-slate-300 font-medium">Rendimiento por Períodos Móviles (Trailing Returns)</span>
-          <span class="text-[10px] text-slate-500 font-mono">[1S, 1M, 3M, 6M, 1A, YTD]</span>
+      <!-- MONTHLY TABLE -->
+      <div class="panel-card rounded-lg p-5">
+        <div class="mb-4">
+          <h2 class="text-sm font-semibold text-white tracking-wide">Rendimientos Mensuales Consolidados (%)</h2>
+          <p class="text-xs text-slate-400 font-mono mt-0.5">Matriz de rentabilidad mensual neta y balance YTD</p>
         </div>
-        <div class="flex items-center gap-2 text-slate-400 text-xs font-mono">
-          <span class="text-[11px] group-open:hidden">Ver períodos</span>
-          <span class="text-[11px] hidden group-open:inline">Ocultar</span>
-          <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </div>
-      </summary>
-      
-      <div class="p-4 pt-1 border-t border-surface-border">
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center pt-2">
-          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
-            <div class="text-[10px] text-slate-400 font-mono uppercase">1 Semana</div>
-            <div id="ret-1w" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-          </div>
-          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
-            <div class="text-[10px] text-slate-400 font-mono uppercase">1 Mes</div>
-            <div id="ret-1m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-          </div>
-          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
-            <div class="text-[10px] text-slate-400 font-mono uppercase">3 Meses</div>
-            <div id="ret-3m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-          </div>
-          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
-            <div class="text-[10px] text-slate-400 font-mono uppercase">6 Meses</div>
-            <div id="ret-6m" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-          </div>
-          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
-            <div class="text-[10px] text-slate-400 font-mono uppercase">1 Año</div>
-            <div id="ret-1y" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-          </div>
-          <div class="bg-black/30 p-2.5 rounded border border-white/[0.03]">
-            <div class="text-[10px] text-slate-400 font-mono uppercase">YTD</div>
-            <div id="ret-ytd" class="text-base font-mono num-tabular font-bold mt-0.5">--</div>
-          </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs font-mono border-collapse min-w-[720px]">
+            <thead>
+              <tr class="border-b border-white/[0.06] text-slate-400 text-center">
+                <th class="py-2 px-3 text-left font-medium">AÑO</th>
+                <th class="font-medium">ENE</th><th class="font-medium">FEB</th><th class="font-medium">MAR</th>
+                <th class="font-medium">ABR</th><th class="font-medium">MAY</th><th class="font-medium">JUN</th>
+                <th class="font-medium">JUL</th><th class="font-medium">AGO</th><th class="font-medium">SEP</th>
+                <th class="font-medium">OCT</th><th class="font-medium">NOV</th><th class="font-medium">DIC</th>
+                <th class="py-2 px-3 text-right bg-white/[0.02] font-semibold text-slate-300">YTD</th>
+              </tr>
+            </thead>
+            <tbody id="monthly-table-body" class="divide-y divide-white/[0.03]">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
         </div>
       </div>
-    </details>
 
-    <!-- MONTHLY TABLE -->
-    <div class="panel-card rounded-lg p-5">
-      <div class="mb-4">
-        <h2 class="text-sm font-semibold text-white tracking-wide">Rendimientos Mensuales Consolidados (%)</h2>
-        <p class="text-xs text-slate-400 font-mono mt-0.5">Matriz de rentabilidad mensual neta y balance YTD</p>
+      <!-- UNDERWATER DRAWDOWN -->
+      <div class="panel-card rounded-lg p-5">
+        <h2 class="text-sm font-semibold text-white tracking-wide">Curva de Retroceso Submarino (Underwater Drawdown %)</h2>
+        <p class="text-xs text-slate-400 font-mono mt-0.5 mb-4">Magnitud porcentual de retroceso desde el último máximo histórico</p>
+        <div class="h-32 w-full">
+          <canvas id="drawdownChart"></canvas>
+        </div>
       </div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full text-xs font-mono border-collapse min-w-[720px]">
-          <thead>
-            <tr class="border-b border-white/[0.06] text-slate-400 text-center">
-              <th class="py-2 px-3 text-left font-medium">AÑO</th>
-              <th class="font-medium">ENE</th><th class="font-medium">FEB</th><th class="font-medium">MAR</th>
-              <th class="font-medium">ABR</th><th class="font-medium">MAY</th><th class="font-medium">JUN</th>
-              <th class="font-medium">JUL</th><th class="font-medium">AGO</th><th class="font-medium">SEP</th>
-              <th class="font-medium">OCT</th><th class="font-medium">NOV</th><th class="font-medium">DIC</th>
-              <th class="py-2 px-3 text-right bg-white/[0.02] font-semibold text-slate-300">YTD</th>
-            </tr>
-          </thead>
-          <tbody id="monthly-table-body" class="divide-y divide-white/[0.03]">
-            <!-- Injected by JS -->
-          </tbody>
-        </table>
+
+      <!-- RECENT SETTLEMENTS -->
+      <div class="panel-card rounded-lg p-5">
+        <h2 class="text-sm font-semibold text-white tracking-wide mb-3">Auditoría de Liquidaciones Recientes</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs font-mono text-left">
+            <thead class="border-b border-white/[0.06] text-slate-400">
+              <tr>
+                <th class="py-2 font-medium">FECHA</th>
+                <th class="py-2 font-medium">RETORNO ACUM</th>
+                <th class="py-2 font-medium">RETORNO SESIÓN</th>
+                <th class="py-2 font-medium">DRAWDOWN</th>
+                <th class="py-2 font-medium">S&P 500 ACUM</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body" class="divide-y divide-white/[0.02] text-slate-300">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <!-- UNDERWATER DRAWDOWN -->
-    <div class="panel-card rounded-lg p-5">
-      <h2 class="text-sm font-semibold text-white tracking-wide">Curva de Retroceso Submarino (Underwater Drawdown %)</h2>
-      <p class="text-xs text-slate-400 font-mono mt-0.5 mb-4">Magnitud porcentual de retroceso desde el último máximo histórico</p>
-      <div class="h-32 w-full">
-        <canvas id="drawdownChart"></canvas>
-      </div>
-    </div>
+    </main>
 
-    <!-- RECENT SETTLEMENTS -->
-    <div class="panel-card rounded-lg p-5">
-      <h2 class="text-sm font-semibold text-white tracking-wide mb-3">Auditoría de Liquidaciones Recientes</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-xs font-mono text-left">
-          <thead class="border-b border-white/[0.06] text-slate-400">
-            <tr>
-              <th class="py-2 font-medium">FECHA</th>
-              <th class="py-2 font-medium">RETORNO ACUM</th>
-              <th class="py-2 font-medium">RETORNO SESIÓN</th>
-              <th class="py-2 font-medium">DRAWDOWN</th>
-              <th class="py-2 font-medium">S&P 500 ACUM</th>
-            </tr>
-          </thead>
-          <tbody id="history-table-body" class="divide-y divide-white/[0.02] text-slate-300">
-            <!-- Injected by JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-slate-500 font-mono">
+      NScheelje Strategy • Autonomous Quantitative Execution System
+    </footer>
 
-  </main>
-
-  <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-slate-500 font-mono">
-    NScheelje Strategy • Autonomous Quantitative Execution System
-  </footer>
+  </div>
 
   <script>
     let globalPortfolioData = [];
     let perfChart = null;
     let ddChart = null;
     let currentRange = 'ALL';
+
+    function enterDashboard() {
+      const gate = document.getElementById('gate-screen');
+      const dashboard = document.getElementById('dashboard-view');
+      
+      gate.style.opacity = '0';
+      gate.style.pointerEvents = 'none';
+      
+      setTimeout(() => {
+        gate.style.display = 'none';
+        dashboard.classList.remove('opacity-0');
+        if (perfChart) perfChart.resize();
+        if (ddChart) ddChart.resize();
+      }, 500);
+    }
 
     async function loadPortfolioData() {
       try {
