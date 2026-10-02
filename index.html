@@ -3,20 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="dark">
-<meta name="description" content="Historial de rendimiento de NScheelje Strategy, con comparación de benchmark, métricas y metodología explícita.">
-<title>NScheelje Strategy | Historial de rendimiento</title>
+<meta name="color-scheme" content="light">
+<meta name="description" content="NScheelje Strategy: historial de rendimiento, comparación con VOO y análisis de riesgo.">
+<title>NScheelje Strategy | Performance</title>
 
 <style>
 :root {
-  color-scheme: dark;
-  --bg: #020306;
-  --surface: #090c13;
-  --line: #252c38;
-  --text: #e2e8f0;
-  --muted: #a2aebf;
-  --green: #34d399;
-  --red: #fb7185;
+  --bg: #f4f6f8;
+  --card: #fff;
+  --ink: #152c43;
+  --muted: #5c6f80;
+  --line: #e2e8ee;
+  --green: #087f72;
+  --red: #b64151;
+  --blue: #65799e;
+  --gold: #91641c;
 }
 
 * { box-sizing: border-box; }
@@ -24,101 +25,390 @@
 body {
   margin: 0;
   background: var(--bg);
-  color: var(--text);
-  font: 14px/1.6 system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  font: 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 65% 0%, #14203155, transparent 65%);
-  z-index: -1;
-}
+button, input, select { font: inherit; }
+a { color: inherit; }
 
-a { color: #cbd5e1; }
-
-button, .file-label, select {
-  font: inherit;
-  background: #111720;
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+button, select, .file-label {
+  background: white;
+  color: var(--ink);
+  border: 1px solid #ced8e1;
+  border-radius: 7px;
   padding: 8px 12px;
   cursor: pointer;
 }
 
-button:hover, .file-label:hover { border-color: #93a3b8; }
-button:disabled { opacity: .45; cursor: default; }
+button:hover, .file-label:hover { background: #edf3f5; }
+button:disabled { opacity: .5; cursor: default; }
 
-a:focus-visible,
-button:focus-visible,
-summary:focus-visible,
-select:focus-visible,
-.chart:focus-visible,
-.file-label:focus-within {
-  outline: 2px solid var(--green);
+:focus-visible {
+  outline: 3px solid #138a7b;
   outline-offset: 4px;
 }
 
 .skip {
   position: absolute;
-  left: 16px;
-  top: -100px;
-  z-index: 10;
-  background: var(--surface);
-  padding: 10px;
+  top: -80px;
+  left: 20px;
+  z-index: 5;
+  background: white;
+  padding: 12px;
 }
 
-.skip:focus { top: 10px; }
+.skip:focus { top: 12px; }
 
 header {
+  background: white;
   border-bottom: 1px solid var(--line);
-  background: #020306ee;
 }
 
-header > div {
-  max-width: 1280px;
+.top {
+  max-width: 1220px;
   margin: auto;
-  padding: 20px 24px;
+  min-height: 82px;
+  padding: 18px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 20px;
 }
 
-.brand { display: flex; gap: 14px; align-items: center; }
+.brand { display: flex; align-items: center; gap: 13px; }
 
-.logo {
-  border: 1px solid #566172;
+.monogram {
+  width: 41px;
+  height: 41px;
   border-radius: 50%;
-  padding: 11px;
-  font-weight: 700;
+  background: var(--ink);
+  color: white;
+  display: grid;
+  place-items: center;
+  font: 600 12px ui-monospace, monospace;
+}
+
+.brand strong { font-size: 14px; letter-spacing: .11em; }
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.registry {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font: 12px ui-monospace, monospace;
+  padding: 9px 12px;
+  border: 1px solid #d5dfe7;
+  border-radius: 6px;
+}
+
+.registry svg { width: 15px; height: 15px; }
+.header-right { display: flex; align-items: center; gap: 20px; }
+.last { text-align: right; font-size: 12px; }
+.muted { color: var(--muted); }
+
+main {
+  max-width: 1220px;
+  margin: auto;
+  padding: 32px 28px 48px;
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.intro h1 {
+  font-size: 29px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -.04em;
+  margin: 7px 0 10px;
+}
+
+.intro p { margin: 0; color: var(--muted); }
+
+.period-chip {
+  font-size: 12px;
+  background: #e9f0f3;
+  color: #344e63;
+  padding: 9px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  box-shadow: 0 3px 12px #102b4204;
+}
+
+.kpi { padding: 19px 21px; }
+
+.label {
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.value {
+  font-size: 30px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
+  margin: 9px 0;
+}
+
+.small { font-size: 12px; }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+.neutral { color: var(--muted); }
+.panel { padding: 23px; margin-bottom: 16px; }
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px;
+  letter-spacing: -.015em;
+}
+
+p { margin: 5px 0 12px; }
+
+.ranges {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  background: #f3f6f8;
+  padding: 4px;
+  border-radius: 7px;
+}
+
+.ranges button {
+  border: 0;
+  background: transparent;
+  padding: 6px 11px;
+  color: var(--muted);
   font-size: 12px;
 }
 
-.brand h1 {
-  font-size: 15px;
-  letter-spacing: .09em;
-  margin: 0;
+.ranges button[aria-pressed="true"] {
+  background: var(--ink);
+  color: white;
 }
 
-.sub, .muted { color: var(--muted); }
-.sub { font-size: 12px; }
+.chart-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 17px 0 3px;
+  font-size: 12px;
+}
 
-main {
-  max-width: 1280px;
-  margin: auto;
-  padding: 26px 24px 50px;
+.legend { display: flex; gap: 22px; }
+.legend span { display: flex; align-items: center; gap: 7px; }
+
+.swatch {
+  width: 16px;
+  height: 3px;
+  background: var(--green);
+  display: inline-block;
+}
+
+.swatch.bench {
+  height: 0;
+  background: transparent;
+  border-top: 2px dashed var(--blue);
+}
+
+.chart {
+  position: relative;
+  width: 100%;
+  min-height: 100px;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: 400px;
+  touch-action: pan-y;
+}
+
+.chart.empty {
+  display: grid;
+  place-items: center;
+  min-height: 280px;
+  color: var(--muted);
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 2;
+  width: 236px;
+  max-width: calc(100% - 16px);
+  background: #fff;
+  border: 1px solid #d5dfe7;
+  border-radius: 9px;
+  box-shadow: 0 7px 28px #18304722;
+  padding: 13px 15px;
+  pointer-events: none;
+  font-size: 12px;
+}
+
+.tooltip-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 5px 0;
+  color: var(--muted);
+}
+
+.tooltip-row strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.chart-hint span { margin-right: 12px; }
+
+.chart-table summary {
+  font-size: 12px;
+  padding-top: 14px;
+  color: var(--muted);
+}
+
+details.panel { padding: 0; }
+
+details.panel > summary {
+  padding: 19px 23px;
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+details.panel > summary::-webkit-details-marker { display: none; }
+details.panel > summary::after { content: "+"; color: var(--muted); }
+details.panel[open] > summary::after { content: "−"; }
+
+.detail-body {
+  padding: 0 23px 23px;
+  border-top: 1px solid var(--line);
+}
+
+.detail-body > p:first-child { margin-top: 15px; }
+
+.trailing {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.trailing > div {
+  padding: 14px;
+  background: #f7f9fb;
+  border-radius: 7px;
+}
+
+.trailing strong {
+  display: block;
+  font-size: 19px;
+  font-weight: 600;
+  margin-top: 7px;
+  font-variant-numeric: tabular-nums;
+}
+
+.analytics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.analytics .kpi { background: #f7f9fb; border-radius: 8px; }
+.analytics .value { font-size: 27px; }
+
+.badge {
+  font-size: 10px;
+  background: #fbf2df;
+  color: #7d581d;
+  padding: 3px 7px;
+  border-radius: 4px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.note {
+  background: #f6f8fa;
+  border-left: 3px solid #c7d3de;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 16px;
+}
+
+.note.warn {
+  background: #fcf8ee;
+  border-color: #ceb887;
+  color: #795c2a;
 }
 
 .tools {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.tools input[type="number"] {
+  width: 88px;
+  padding: 7px;
+  border: 1px solid #ced8e1;
+  border-radius: 5px;
 }
 
 .file-label input {
@@ -128,103 +418,25 @@ main {
   opacity: 0;
 }
 
-.status {
-  border: 1px solid var(--line);
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 18px;
-  white-space: pre-line;
+.file-label:focus-within {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
 }
 
-.status.error { border-color: #a94355; color: #fecdd3; }
-.status.warn { border-color: #8b7034; color: #fde68a; }
-
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 18px;
-}
-
-.kpis .card { padding: 17px; }
-
-.label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--muted);
-}
-
-.value {
-  font: 700 25px/1.6 ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-variant-numeric: tabular-nums;
-}
-
-.small { font-size: 12px; }
-.positive { color: var(--green); }
-.negative { color: var(--red); }
-.neutral { color: var(--muted); }
-
-h2 { font-size: 15px; margin: 0 0 3px; }
-p { margin: 6px 0 12px; }
-
-.chart-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.ranges { display: flex; flex-wrap: wrap; gap: 4px; }
-.ranges button { font-size: 12px; padding: 5px 10px; }
-
-.ranges button[aria-pressed="true"] {
-  background: #283444;
-  border-color: #a2aebf;
-  color: white;
-}
-
-.legend { display: flex; gap: 20px; margin: 10px 0; font-size: 12px; }
-.legend span:first-child { color: var(--green); }
-.chart { position: relative; width: 100%; outline: none; }
-.chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
-
-.chart-tip {
-  min-height: 30px;
-  font: 12px ui-monospace, monospace;
-  color: var(--text);
-  padding: 5px 0;
-}
-
-.empty {
-  min-height: 240px;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-}
-
-.scroll { overflow: auto; }
+.scroll { overflow: auto; margin-top: 14px; }
 
 table {
-  border-collapse: collapse;
   width: 100%;
-  font: 12px/1.6 ui-monospace, monospace;
+  border-collapse: collapse;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
 th, td {
-  padding: 11px 10px;
-  border-bottom: 1px solid #202735;
+  padding: 12px 9px;
   white-space: nowrap;
   text-align: right;
+  border-bottom: 1px solid var(--line);
 }
 
 th { color: var(--muted); font-weight: 500; }
@@ -232,70 +444,76 @@ th:first-child, td:first-child { text-align: left; }
 
 caption {
   text-align: left;
+  font-size: 12px;
   color: var(--muted);
-  font: 12px system-ui;
   margin-bottom: 10px;
 }
 
-summary { cursor: pointer; font-weight: 600; }
-details p { margin-top: 14px; }
-
-.trailing {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.trailing > div {
-  padding: 12px;
-  background: #030509;
+.status {
+  font-size: 13px;
+  padding: 12px 16px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 18px;
 }
 
-.trailing strong {
-  display: block;
-  font: 600 18px ui-monospace, monospace;
-  margin-top: 8px;
+.status.error {
+  color: #9c3043;
+  border-color: #e7b7c1;
+  background: #fff4f6;
 }
 
-.method { max-width: 1000px; }
-.method li { margin: 8px 0; }
+.disclosure {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 22px 0 0;
+  max-width: 900px;
+}
 
 footer {
+  max-width: 1220px;
+  margin: auto;
   border-top: 1px solid var(--line);
-  text-align: center;
-  padding: 24px;
+  padding: 20px 28px 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
+li { margin: 9px 0; }
 [hidden] { display: none !important; }
 
-@media (max-width: 1000px) {
-  .kpis { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 850px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .header-right { gap: 12px; }
+  .intro { align-items: flex-start; }
+  .intro h1 { font-size: 26px; }
 }
 
-@media (max-width: 650px) {
-  header > div {
-    padding: 16px;
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  main { padding: 20px 14px; }
-  .kpis { grid-template-columns: repeat(2, 1fr); }
-  .kpis .card:last-child { grid-column: span 2; }
-  .card { padding: 15px; }
+@media (max-width: 560px) {
+  .top { padding: 16px; gap: 14px; flex-wrap: wrap; }
+  .header-right { width: 100%; justify-content: space-between; }
+  .last { text-align: left; }
+  .brand strong { font-size: 12px; }
+  main { padding: 24px 14px; }
+  .intro { flex-direction: column; gap: 13px; }
+  .cards { gap: 10px; }
+  .kpi { padding: 15px; }
+  .value { font-size: 27px; }
+  .label { font-size: 10px; }
+  .panel { padding: 17px; }
+  .ranges button { padding: 6px 9px; }
+  .chart svg { height: 320px; }
+  .legend { gap: 14px; }
   .trailing { grid-template-columns: repeat(2, 1fr); }
-  .value { font-size: 23px; }
-  .chart-tip { min-height: 50px; }
-  .brand h1 { font-size: 14px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { scroll-behavior: auto !important; }
+  .analytics { grid-template-columns: 1fr; }
+  .detail-body { padding: 0 17px 18px; }
+  details.panel > summary { padding: 17px; }
+  .chart-meta { gap: 9px; }
+  footer { padding: 20px 16px; flex-direction: column; }
 }
 </style>
 </head>
@@ -304,94 +522,91 @@ footer {
 <a class="skip" href="#main">Ir al contenido</a>
 
 <header>
-  <div>
+  <div class="top">
     <div class="brand">
-      <span class="logo" aria-hidden="true">NS</span>
+      <span class="monogram" aria-hidden="true">NS</span>
       <div>
-        <h1>NSCHEELJE STRATEGY</h1>
-        <div class="sub">Historial cuantitativo de cartera</div>
+        <strong>NSCHEELJE STRATEGY</strong>
+        <div class="eyebrow">Portfolio performance</div>
       </div>
     </div>
 
-    <div class="small">
-      <span class="muted">Último registro: </span>
-      <span id="last-date">—</span>
-      <span id="daily"></span>
-      <br>
+    <div class="header-right">
+      <div class="last">
+        <span class="muted">Último cierre</span><br>
+        <span id="last-date">—</span>
+        <strong id="daily"></strong>
+      </div>
+
       <a
+        class="registry"
         href="https://github.com/Stronghand42/portfolio-data/commits/main/nav_history.csv"
         target="_blank"
         rel="noopener noreferrer"
-      >Historial de cambios en GitHub ↗</a>
+        title="Historial de cambios y hashes SHA en GitHub"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          aria-hidden="true"
+        >
+          <path d="M12 3 4 7v5c0 5 8 9 8 9s8-4 8-9V7z"/>
+          <path d="m8 12 3 3 5-6"/>
+        </svg>
+        Registro SHA ↗
+      </a>
     </div>
   </div>
 </header>
 
 <main id="main">
-  <div class="tools">
-    <button id="reload" type="button">Actualizar datos</button>
-
-    <label class="file-label">
-      Abrir CSV local
-      <input
-        id="file"
-        type="file"
-        accept=".csv,text/csv"
-        aria-label="Abrir CSV local"
-      >
-    </label>
-
-    <button id="download" disabled>Descargar serie validada</button>
-
-    <label class="small muted" for="frequency">Frecuencia del NAV</label>
-    <select id="frequency">
-      <option value="252">Sesiones de mercado (252/año)</option>
-      <option value="365.25">Días calendario (365,25/año)</option>
-    </select>
+  <div class="intro">
+    <div>
+      <div class="eyebrow">Historial de inversión</div>
+      <h1>Rendimiento de la estrategia</h1>
+      <p>Evolución de la cartera y comparación con el mercado.</p>
+    </div>
+    <span id="period-chip" class="period-chip">Esperando datos</span>
   </div>
 
   <div id="status" class="status" role="status" aria-live="polite">
-    Preparando datos…
+    Cargando historial…
   </div>
 
-  <div class="kpis">
-    <section class="card">
-      <div class="label">Retorno del historial</div>
+  <div class="cards">
+    <section class="card kpi">
+      <div class="label">Retorno acumulado</div>
       <div id="cum" class="value">—</div>
-      <div id="inception" class="small muted">Desde —</div>
+      <div id="inception" class="small muted">Desde el primer registro</div>
     </section>
 
-    <section class="card">
-      <div class="label">CAGR</div>
-      <div id="cagr" class="value">—</div>
-      <div id="bcagr" class="small muted">Benchmark: —</div>
+    <section class="card kpi">
+      <div class="label">Benchmark · VOO</div>
+      <div id="benchmark" class="value">—</div>
+      <div class="small muted">Mismo período que la estrategia</div>
     </section>
 
-    <section class="card">
-      <div class="label">Volatilidad anualizada</div>
-      <div id="vol" class="value">—</div>
-      <div id="bvol" class="small muted">Benchmark: —</div>
-    </section>
-
-    <section class="card">
-      <div class="label">Sharpe · tasa libre de riesgo 0%</div>
-      <div id="sharpe" class="value">—</div>
-      <div id="bsharpe" class="small muted">Benchmark: —</div>
-    </section>
-
-    <section class="card">
-      <div class="label">Drawdown máximo / actual</div>
+    <section class="card kpi">
+      <div class="label">Caída máxima</div>
       <div id="maxdd" class="value">—</div>
-      <div id="dd" class="small muted">Actual: —</div>
+      <div id="dd" class="small muted">Caída actual: —</div>
+    </section>
+
+    <section class="card kpi">
+      <div class="label">Historial disponible</div>
+      <div id="observations" class="value">—</div>
+      <div id="duration" class="small muted">Registros de cierre</div>
     </section>
   </div>
 
-  <section class="card">
-    <div class="chart-head">
+  <section class="card panel">
+    <div class="panel-head">
       <div>
-        <h2>Rendimiento acumulado (%)</h2>
+        <h2>Equity curve</h2>
         <p class="small muted">
-          Ambas series se normalizan al mismo cierre inicial del período seleccionado.
+          Rentabilidad acumulada en el período seleccionado.
         </p>
       </div>
 
@@ -406,31 +621,31 @@ footer {
       </div>
     </div>
 
-    <div class="legend">
-      <span>━ NScheelje Strategy</span>
-      <span>┄ Benchmark (VOO declarado)</span>
+    <div class="chart-meta">
+      <div class="legend">
+        <span><i class="swatch"></i>NScheelje Strategy</span>
+        <span id="benchmark-legend"><i class="swatch bench"></i>VOO</span>
+      </div>
+      <span id="range-note" class="muted">—</span>
     </div>
 
-    <p id="range-note" class="small muted">
-      Los indicadores superiores corresponden a todo el historial.
+    <div id="performance" class="chart empty">Esperando historial.</div>
+
+    <p class="chart-hint">
+      <span>Desplaza el cursor o toca la curva para ver los datos.</span>
+      <span>Teclado: ← →</span>
     </p>
 
-    <div id="performance" class="chart empty">
-      Carga un historial para ver el gráfico.
-    </div>
-
-    <div id="chart-tip" class="chart-tip" aria-live="off"></div>
-
-    <details>
-      <summary>Ver datos del período en tabla</summary>
+    <details class="chart-table">
+      <summary>Ver datos del gráfico</summary>
       <div class="scroll">
         <table id="chart-table">
-          <caption>Rentabilidad acumulada desde la base seleccionada.</caption>
+          <caption>Retornos desde el cierre base del período seleccionado.</caption>
           <thead>
             <tr>
               <th scope="col">Fecha</th>
               <th scope="col">Estrategia</th>
-              <th scope="col">Benchmark</th>
+              <th scope="col">VOO</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -439,148 +654,241 @@ footer {
     </details>
   </section>
 
-  <details class="card" open>
-    <summary>Rendimiento por períodos</summary>
-    <div id="trailing" class="trailing"></div>
-    <p class="small muted">
-      Meses y años calendario. N/D indica historial insuficiente.
-      * indica un período parcial.
-    </p>
+  <details class="card panel">
+    <summary>Rendimientos por período</summary>
+    <div class="detail-body">
+      <div id="trailing" class="trailing"></div>
+      <p class="small muted">
+        * Período parcial. N/D: el historial no cubre el período completo.
+      </p>
+    </div>
   </details>
 
-  <section class="card">
-    <h2>Rendimientos mensuales (%)</h2>
-    <p class="small muted">
-      * Período parcial. N/D: falta la base del mes anterior.
-      —: no hay observaciones.
-    </p>
+  <details class="card panel" id="analysis-panel">
+    <summary>Análisis de riesgo y anualización</summary>
+    <div class="detail-body">
+      <p id="sample-note" class="small muted"></p>
 
-    <div class="scroll">
-      <table id="monthly">
-        <caption>Retornos desde el último cierre disponible del mes anterior.</caption>
-        <thead>
-          <tr>
-            <th scope="col">Año</th>
-            <th scope="col">Ene</th>
-            <th scope="col">Feb</th>
-            <th scope="col">Mar</th>
-            <th scope="col">Abr</th>
-            <th scope="col">May</th>
-            <th scope="col">Jun</th>
-            <th scope="col">Jul</th>
-            <th scope="col">Ago</th>
-            <th scope="col">Sep</th>
-            <th scope="col">Oct</th>
-            <th scope="col">Nov</th>
-            <th scope="col">Dic</th>
-            <th scope="col">Año / YTD</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div class="analytics">
+        <section class="kpi">
+          <div class="label">
+            <span id="cagr-label">Retorno anualizado</span>
+            <span id="cagr-badge" class="badge">Estimación</span>
+          </div>
+          <div id="cagr" class="value">—</div>
+          <div id="bcagr" class="small muted">VOO: —</div>
+        </section>
+
+        <section class="kpi">
+          <div class="label">
+            Volatilidad anualizada
+            <span id="vol-badge" class="badge">Provisional</span>
+          </div>
+          <div id="vol" class="value">—</div>
+          <div id="bvol" class="small muted">VOO: —</div>
+        </section>
+
+        <section class="kpi">
+          <div class="label">
+            Sharpe anualizado
+            <span id="sharpe-badge" class="badge">Provisional</span>
+          </div>
+          <div id="sharpe" class="value">—</div>
+          <div id="bsharpe" class="small muted">VOO: —</div>
+        </section>
+      </div>
+
+      <p id="annual-note" class="note warn"></p>
+
+      <p class="small muted">
+        Estos indicadores se recalculan con cada cierre.
+        Volatilidad y Sharpe requieren al menos dos retornos
+        y una frecuencia diaria compatible.
+      </p>
+
+      <h2 style="margin-top:24px">Caídas desde máximos</h2>
+      <p class="small muted">
+        El máximo se calcula desde el inicio del historial,
+        incluso al filtrar fechas.
+      </p>
+      <div id="underwater" class="chart empty">Esperando historial.</div>
     </div>
-  </section>
-
-  <section class="card">
-    <h2>Drawdown (%)</h2>
-    <p class="small muted">
-      Caída desde el máximo observado en todo el historial;
-      el filtro no reinicia ese máximo.
-    </p>
-    <div id="underwater" class="chart empty">
-      Carga un historial para ver el drawdown.
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Últimos registros</h2>
-    <div class="scroll">
-      <table id="recent">
-        <caption>
-          Calculados a partir del NAV.
-          Una variación entre registros no siempre equivale a una sesión.
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Fecha</th>
-            <th scope="col">Retorno acumulado</th>
-            <th scope="col">Entre registros</th>
-            <th scope="col">Drawdown</th>
-            <th scope="col">Benchmark acumulado</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </section>
-
-  <details class="card method">
-    <summary>Metodología y condiciones de los datos</summary>
-    <ul>
-      <li>
-        Fuente automática: <code>nav_history.csv</code>, en la misma carpeta
-        de esta página. Columnas obligatorias: <code>date</code>
-        (AAAA-MM-DD) y <code>nav</code> (número positivo, decimal con punto).
-        <code>benchmark_nav</code> es opcional. Se admite CSV con campos
-        entre comillas, saltos de línea y BOM.
-      </li>
-      <li>
-        El NAV debe representar el valor de una participación, ajustado por
-        aportes y retiros. Un saldo de cuenta con movimientos de capital
-        no permite medir rentabilidad con estas fórmulas. La página no
-        verifica esa condición ni descuenta comisiones por su cuenta.
-      </li>
-      <li>
-        Retorno = NAV final / NAV inicial − 1. La primera observación es
-        la base disponible, no necesariamente el inicio real de la
-        estrategia. Drawdown = NAV / máximo observado − 1.
-        Las columnas de retornos suministradas se contrastan cuando su base
-        coincide; los valores mostrados se recalculan.
-      </li>
-      <li>
-        CAGR = (NAV final / NAV inicial)^(365,25 / días transcurridos) − 1.
-        Solo se presenta con al menos 365 días de historial.
-      </li>
-      <li>
-        Volatilidad: desviación estándar muestral de retornos entre
-        registros × raíz del factor anual. Sharpe: media de esos retornos
-        / desviación estándar × raíz del factor anual, con tasa libre
-        de riesgo asumida de 0%. Mínimo: 20 retornos.
-        No se presentan si la frecuencia elegida no concuerda razonablemente
-        con las fechas; el control detecta huecos grandes, pero no certifica
-        un calendario bursátil.
-      </li>
-      <li>
-        Los filtros usan el último cierre en o antes de la fecha objetivo.
-        YTD usa el último cierre del año anterior; si no existe, muestra
-        retorno desde el primer registro y lo marca parcial.
-        La tabla mensual marca también el primer mes y el último mes
-        abiertos como parciales.
-      </li>
-      <li>
-        El benchmark utiliza exclusivamente los NAV proporcionados.
-        Su identificación como VOO, el ajuste por dividendos y la moneda
-        deben verificarse en el proceso que genera el CSV.
-        No se simulan datos faltantes. Un benchmark incompleto deja sus
-        métricas de historial como N/D.
-      </li>
-      <li>
-        El historial de GitHub permite consultar cambios; no constituye
-        una auditoría independiente ni una certificación de resultados.
-        Los rendimientos históricos no garantizan rendimientos futuros.
-      </li>
-    </ul>
   </details>
+
+  <details class="card panel">
+    <summary>Rendimientos mensuales</summary>
+    <div class="detail-body">
+      <div class="scroll">
+        <table id="monthly">
+          <caption>
+            * Período parcial. — Sin registros.
+            N/D: falta la base del mes anterior.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Año</th>
+              <th scope="col">Ene</th>
+              <th scope="col">Feb</th>
+              <th scope="col">Mar</th>
+              <th scope="col">Abr</th>
+              <th scope="col">May</th>
+              <th scope="col">Jun</th>
+              <th scope="col">Jul</th>
+              <th scope="col">Ago</th>
+              <th scope="col">Sep</th>
+              <th scope="col">Oct</th>
+              <th scope="col">Nov</th>
+              <th scope="col">Dic</th>
+              <th scope="col">Año / YTD</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="card panel">
+    <summary>Últimos cierres</summary>
+    <div class="detail-body">
+      <div class="scroll">
+        <table id="recent">
+          <caption>
+            La variación entre registros utiliza el cierre anterior disponible.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Acumulado</th>
+              <th scope="col">Entre cierres</th>
+              <th scope="col">Drawdown</th>
+              <th scope="col">VOO acumulado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="card panel">
+    <summary>Metodología y fuente de datos</summary>
+    <div class="detail-body small muted">
+      <ul>
+        <li>
+          Todos los retornos se calculan desde un NAV positivo por participación,
+          ajustado por aportes y retiros. La página no comprueba ese ajuste
+          ni descuenta comisiones por su cuenta. Un saldo de cuenta sin ajustar
+          no sirve como NAV de rentabilidad.
+        </li>
+        <li>
+          Retorno = NAV final / NAV inicial − 1.
+          Drawdown = NAV / máximo observado − 1.
+          El inicio del historial no necesariamente es el inicio real
+          de la estrategia.
+        </li>
+        <li>
+          CAGR o tasa equivalente anual =
+          (NAV final / NAV inicial)^(365,25 / días transcurridos) − 1.
+          Antes de un año se identifica como estimación extrapolada,
+          no como rendimiento anual obtenido ni pronóstico.
+        </li>
+        <li>
+          Volatilidad: desviación estándar muestral de retornos diarios
+          × raíz del factor anual. Sharpe: media de retornos en exceso
+          de la tasa libre de riesgo / desviación estándar × raíz del
+          factor anual. La anualización supone un comportamiento diario
+          comparable y ausencia de autocorrelación relevante;
+          no garantiza estabilidad estadística.
+        </li>
+        <li>
+          Volatilidad y Sharpe se calculan desde dos retornos;
+          se marcan provisionales con menos de 60.
+          Ese umbral es informativo y no certifica fiabilidad.
+          Si faltan fechas, las métricas pueden no estar disponibles.
+        </li>
+        <li>
+          Los períodos usan meses y años calendario, con el último cierre
+          en o antes de la fecha objetivo. YTD usa el cierre del año anterior;
+          sin esa base se marca parcial. Fechas interpretadas en UTC.
+          La curva usa interpolación visual entre cierres; los datos del
+          tooltip siempre corresponden a registros reales.
+        </li>
+        <li>
+          VOO es el benchmark declarado del CSV.
+          Moneda, dividendos, comisiones y origen deben validarse
+          al generar la serie. No se inventan valores faltantes.
+        </li>
+        <li>
+          Registro SHA enlaza a los commits de GitHub para consultar cambios
+          y sus hashes. No equivale a una auditoría independiente
+          ni acredita los resultados financieros.
+        </li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="card panel">
+    <summary>Configuración de datos</summary>
+    <div class="detail-body">
+      <div class="tools">
+        <button id="reload">Actualizar</button>
+
+        <label class="file-label">
+          Abrir CSV
+          <input
+            id="file"
+            type="file"
+            accept=".csv,text/csv"
+            aria-label="Abrir CSV local"
+          >
+        </label>
+
+        <button id="download" disabled>Descargar CSV</button>
+
+        <label for="frequency">Frecuencia</label>
+        <select id="frequency">
+          <option value="252">Sesiones de mercado · 252/año</option>
+          <option value="365.25">Días calendario · 365,25/año</option>
+        </select>
+
+        <label for="rf">Tasa libre de riesgo anual (%)</label>
+        <input
+          id="rf"
+          type="number"
+          value="0"
+          min="0"
+          max="100"
+          step="0.1"
+        >
+      </div>
+
+      <p class="small muted">
+        Carga automática: nav_history.csv en la misma carpeta.
+        Columnas: date, nav y benchmark_nav (opcional).
+        La tasa libre de riesgo es una suposición constante;
+        no se obtiene automáticamente del mercado.
+      </p>
+
+      <div id="diagnostics" class="note"></div>
+    </div>
+  </details>
+
+  <p class="disclosure">
+    El retorno acumulado refleja el historial disponible.
+    Las estimaciones anualizadas pueden cambiar significativamente
+    con nuevos datos. Los resultados históricos no garantizan
+    rendimientos futuros.
+  </p>
 
   <noscript>
-    <div class="status error">
-      Activa JavaScript para cargar datos y calcular métricas.
-    </div>
+    <p class="status error">Activa JavaScript para visualizar el historial.</p>
   </noscript>
 </main>
 
 <footer>
-  NScheelje Strategy · Historial de rendimiento · Fechas calculadas en UTC
+  <span>NScheelje Strategy</span>
+  <span>Historial de rendimiento · Datos calculados desde el NAV</span>
 </footer>
 
 <script>
@@ -722,12 +1030,7 @@ function validateCSV(text) {
     seen.add(raw.date);
 
     const nav = number(raw.nav, 'nav', i + 1);
-    const bench = number(
-      raw.benchmark_nav,
-      'benchmark_nav',
-      i + 1,
-      true
-    );
+    const bench = number(raw.benchmark_nav, 'benchmark_nav', i + 1, true);
 
     if (nav <= 0 || (bench !== null && bench <= 0)) {
       throw Error(`Registro ${i + 1}: el NAV debe ser positivo.`);
@@ -856,10 +1159,8 @@ function period(data, tf) {
   const partial = idx < 0;
   if (partial) idx = 0;
 
-  const selected = data.slice(idx);
-
   return {
-    selected,
+    selected: data.slice(idx),
     partial,
     return: (data.at(-1).nav / data[idx].nav - 1) * 100
   };
@@ -868,7 +1169,7 @@ function period(data, tf) {
 function cagr(data, key) {
   if (
     data.length < 2 ||
-    (data.at(-1).time - data[0].time) / DAY < 365 ||
+    data.at(-1).time <= data[0].time ||
     data.some(d => d[key] === null)
   ) {
     return null;
@@ -917,7 +1218,7 @@ function cadence(data, factor) {
 
 function risk(data, key, factor) {
   if (
-    data.length < 21 ||
+    data.length < 3 ||
     !cadence(data, factor) ||
     data.some(d => d[key] === null)
   ) {
@@ -957,6 +1258,7 @@ function monthly(data) {
 
     const base = map.get(prevKey);
     const firstMonth = key === data[0].date.slice(0, 7);
+
     const open =
       end === data.at(-1) &&
       end.time !== Date.UTC(y, m, 0);
@@ -994,43 +1296,119 @@ function color(v) {
 }
 
 const PortfolioCore = {
-  parseCSV,
-  dateTime,
-  validateCSV,
-  target,
-  period,
-  cagr,
-  cadence,
-  risk,
-  monthly,
-  fmt
+  parseCSV, dateTime, validateCSV, target, period,
+  cagr, cadence, risk, monthly, fmt
 };
 
 if (typeof module !== 'undefined') {
   module.exports = PortfolioCore;
 }
 
+// Interpolación monótona: conserva los cierres y evita picos artificiales.
+function smoothPath(points) {
+  if (!points.length) return '';
+
+  if (points.length === 1) {
+    return `M${points[0][0]},${points[0][1]}`;
+  }
+
+  const slopes = points.slice(1).map(
+    (p, i) => (p[1] - points[i][1]) / (p[0] - points[i][0])
+  );
+
+  const tangent = points.map((p, i) =>
+    i === 0
+      ? slopes[0]
+      : i === points.length - 1
+        ? slopes.at(-1)
+        : (slopes[i - 1] + slopes[i]) / 2
+  );
+
+  slopes.forEach((s, i) => {
+    if (s === 0) {
+      tangent[i] = tangent[i + 1] = 0;
+      return;
+    }
+
+    const a = tangent[i] / s;
+    const b = tangent[i + 1] / s;
+
+    if (a < 0 || b < 0) {
+      tangent[i] = tangent[i + 1] = 0;
+      return;
+    }
+
+    const z = a * a + b * b;
+
+    if (z > 9) {
+      const k = 3 / Math.sqrt(z);
+      tangent[i] = k * a * s;
+      tangent[i + 1] = k * b * s;
+    }
+  });
+
+  let path = `M${points[0][0]},${points[0][1]}`;
+
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1];
+    const b = points[i];
+    const dx = (b[0] - a[0]) / 3;
+
+    path +=
+      ` C${a[0] + dx},${a[1] + tangent[i - 1] * dx}` +
+      ` ${b[0] - dx},${b[1] - tangent[i] * dx}` +
+      ` ${b[0]},${b[1]}`;
+  }
+
+  return path;
+}
+
+function riskEstimate(data, key, factor, rf) {
+  const result = risk(data, key, factor);
+  if (result.vol === null) return result;
+
+  const returns = data.slice(1).map(
+    (d, i) => d[key] / data[i][key] - 1
+  );
+
+  const mean = returns.reduce((s, x) => s + x, 0) / returns.length;
+  const sd = result.vol / 100 / Math.sqrt(factor);
+  const dailyRf = Math.pow(1 + rf / 100, 1 / factor) - 1;
+
+  return {
+    vol: result.vol,
+    sharpe: sd > 1e-12
+      ? (mean - dailyRf) / sd * Math.sqrt(factor)
+      : null
+  };
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = { ...PortfolioCore, smoothPath, riskEstimate };
+}
+
 if (typeof document !== 'undefined') {
+  const $ = id => document.getElementById(id);
+
   let data = [];
   let warnings = [];
   let range = 'ALL';
   let generation = 0;
-  let activeController = null;
-
-  const $ = id => document.getElementById(id);
+  let controller = null;
 
   const set = (id, text) => {
     $(id).textContent = text;
   };
 
-  const metric = (id, v) => {
-    set(id, fmt(v));
+  function metric(id, v, percent = true) {
+    set(id, fmt(v, percent));
     $(id).className = 'value ' + color(v);
-  };
+  }
 
-  function status(text, type = '') {
-    $('status').textContent = text;
-    $('status').className = 'status ' + type;
+  function status(message, error = false) {
+    set('status', message);
+    $('status').className = 'status' + (error ? ' error' : '');
+    $('status').hidden = !message;
   }
 
   function cell(tr, text, cls = '') {
@@ -1038,7 +1416,6 @@ if (typeof document !== 'undefined') {
     td.textContent = text;
     td.className = cls;
     tr.append(td);
-    return td;
   }
 
   function tableRows(id, rows) {
@@ -1047,11 +1424,7 @@ if (typeof document !== 'undefined') {
 
     rows.forEach(values => {
       const tr = document.createElement('tr');
-
-      values.forEach(v => {
-        cell(tr, v.text ?? v, v.cls ?? '');
-      });
-
+      values.forEach(v => cell(tr, v.text ?? v, v.cls ?? ''));
       body.append(tr);
     });
   }
@@ -1062,10 +1435,7 @@ if (typeof document !== 'undefined') {
       tag
     );
 
-    for (const [k, v] of Object.entries(attrs)) {
-      n.setAttribute(k, v);
-    }
-
+    Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
     if (text !== undefined) n.textContent = text;
 
     return n;
@@ -1076,61 +1446,64 @@ if (typeof document !== 'undefined') {
     host.replaceChildren();
     host.classList.remove('empty');
 
-    const w = 1000;
-    const h = drawdown ? 210 : 390;
-    const p = { l: 72, r: 22, t: 18, b: 42 };
+    const width = host.getBoundingClientRect().width;
+    if (width < 10) return;
+
+    const w = Math.max(300, width);
+    const h = drawdown ? 200 : width < 560 ? 320 : 400;
+    const p = { l: 51, r: 18, t: 24, b: 39 };
 
     const svg = svgNode('svg', {
       viewBox: `0 0 ${w} ${h}`,
       role: 'img',
       'aria-label': drawdown
-        ? 'Drawdown desde el máximo del historial'
-        : 'Rendimiento acumulado de estrategia y benchmark. ' +
-          'Datos accesibles en la tabla del período.'
+        ? 'Caída desde el máximo del historial'
+        : 'Rentabilidad acumulada. Datos accesibles en la tabla del gráfico.'
     });
 
+    svg.style.height = h + 'px';
     host.append(svg);
 
-    const a = selected[0];
+    const base = selected[0];
 
     const series = drawdown
       ? [selected.map(d => d.dd)]
       : [
-          selected.map(d => (d.nav / a.nav - 1) * 100),
+          selected.map(d => (d.nav / base.nav - 1) * 100),
           selected.map(d =>
-            a.bench !== null && d.bench !== null
-              ? (d.bench / a.bench - 1) * 100
+            base.bench !== null && d.bench !== null
+              ? (d.bench / base.bench - 1) * 100
               : null
           )
         ];
 
-    const all = series.flat().filter(v => v !== null);
-    let min = Math.min(0, ...all);
-    let max = Math.max(0, ...all);
+    const values = series.flat().filter(v => v !== null);
+    let low = Math.min(0, ...values);
+    let high = Math.max(0, ...values);
 
-    if (max === min) {
-      min -= 1;
-      max += 1;
+    if (low === high) {
+      low -= .5;
+      high += .5;
     }
 
-    const pad = (max - min) * .08;
-    min -= pad;
-    if (!drawdown) max += pad;
+    const padding = (high - low) * .12;
+    low -= padding;
+    if (!drawdown) high += padding;
 
-    const span = selected.at(-1).time - a.time;
+    const span = selected.at(-1).time - base.time;
 
     const x = i =>
       p.l +
-      (span ? (selected[i].time - a.time) / span : 0) *
+      (span ? (selected[i].time - base.time) / span : 0) *
       (w - p.l - p.r);
 
     const y = v =>
       p.t +
-      (max - v) / (max - min) *
+      (high - v) / (high - low) *
       (h - p.t - p.b);
 
     for (let j = 0; j < 5; j++) {
-      const v = min + (max - min) * j / 4;
+      const v = low + (high - low) * j / 4;
 
       svg.append(
         svgNode('line', {
@@ -1138,152 +1511,293 @@ if (typeof document !== 'undefined') {
           x2: w - p.r,
           y1: y(v),
           y2: y(v),
-          stroke: '#252c38'
+          stroke: '#e6ebef',
+          'stroke-dasharray': '3 5'
         }),
         svgNode('text', {
-          x: p.l - 9,
+          x: p.l - 8,
           y: y(v) + 4,
-          fill: '#a2aebf',
+          fill: '#657787',
           'text-anchor': 'end',
-          'font-size': 12
+          'font-size': 11
         }, v.toFixed(1) + '%')
       );
     }
 
-    const n = Math.min(5, selected.length);
+    svg.append(svgNode('line', {
+      x1: p.l,
+      x2: w - p.r,
+      y1: y(0),
+      y2: y(0),
+      stroke: '#bdcad5',
+      'stroke-width': 1
+    }));
 
-    for (let j = 0; j < n; j++) {
+    const ticks = Math.min(width < 560 ? 3 : 5, selected.length);
+
+    for (let j = 0; j < ticks; j++) {
       const i = Math.round(
-        j * (selected.length - 1) / Math.max(1, n - 1)
+        j * (selected.length - 1) / Math.max(1, ticks - 1)
       );
 
       svg.append(svgNode('text', {
         x: x(i),
         y: h - 12,
-        fill: '#a2aebf',
+        fill: '#657787',
         'text-anchor': j === 0
           ? 'start'
-          : j === n - 1
+          : j === ticks - 1
             ? 'end'
             : 'middle',
-        'font-size': 12
-      }, selected[i].date));
+        'font-size': 11
+      }, selected[i].date.slice(5)));
     }
 
-    series.forEach((values, s) => {
-      let path = '';
-      let pen = false;
+    const defs = svgNode('defs');
 
-      values.forEach((v, i) => {
-        if (v === null) {
-          pen = false;
-          return;
-        }
-
-        path +=
-          (pen ? 'L' : 'M') +
-          x(i).toFixed(2) + ' ' +
-          y(v).toFixed(2) + ' ';
-
-        pen = true;
-      });
-
-      svg.append(svgNode('path', {
-        d: path,
-        fill: 'none',
-        stroke: drawdown
-          ? '#fb7185'
-          : s === 0
-            ? '#34d399'
-            : '#cbd5e1',
-        'stroke-width': 2,
-        'stroke-dasharray': s === 1 ? '5 5' : 'none'
-      }));
+    const grad = svgNode('linearGradient', {
+      id: id + '-fill',
+      x1: 0,
+      x2: 0,
+      y1: 0,
+      y2: 1
     });
 
-    if (!drawdown) {
-      host.tabIndex = 0;
+    grad.append(
+      svgNode('stop', {
+        offset: '0%',
+        'stop-color': drawdown ? '#b64151' : '#087f72',
+        'stop-opacity': '.13'
+      }),
+      svgNode('stop', {
+        offset: '100%',
+        'stop-color': drawdown ? '#b64151' : '#087f72',
+        'stop-opacity': '.01'
+      })
+    );
 
-      host.setAttribute(
-        'aria-label',
-        'Gráfico interactivo. Usa las flechas izquierda y derecha ' +
-        'para recorrer fechas.'
-      );
+    defs.append(grad);
+    svg.append(defs);
 
-      let cursor = selected.length - 1;
+    series.forEach((s, k) => {
+      const segments = [];
+      let segment = [];
 
-      const line = svgNode('line', {
-        y1: p.t,
-        y2: h - p.b,
-        stroke: '#8693a7',
-        'stroke-dasharray': '3 4',
+      s.forEach((v, i) => {
+        if (v === null) {
+          if (segment.length) segments.push(segment);
+          segment = [];
+        } else {
+          segment.push([x(i), y(v)]);
+        }
+      });
+
+      if (segment.length) segments.push(segment);
+
+      segments.forEach(points => {
+        const path = smoothPath(points);
+
+        if (k === 0 && points.length > 1) {
+          svg.append(svgNode('path', {
+            d: path +
+              ` L${points.at(-1)[0]},${y(0)}` +
+              ` L${points[0][0]},${y(0)} Z`,
+            fill: `url(#${id}-fill)`
+          }));
+        }
+
+        svg.append(svgNode('path', {
+          d: path,
+          fill: 'none',
+          stroke: drawdown
+            ? '#b64151'
+            : k === 0
+              ? '#087f72'
+              : '#65799e',
+          'stroke-width': k === 0 ? 2.5 : 1.7,
+          'stroke-dasharray': k === 1 ? '5 5' : 'none',
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round'
+        }));
+      });
+    });
+
+    if (drawdown) return;
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.hidden = true;
+    tooltip.setAttribute('role', 'status');
+    tooltip.setAttribute('aria-live', 'off');
+    host.append(tooltip);
+
+    const title = document.createElement('div');
+    title.className = 'tooltip-title';
+    tooltip.append(title);
+
+    const fields = [
+      'Estrategia · período',
+      'VOO · período',
+      'Entre cierres',
+      'Drawdown',
+      'Índice · base 100'
+    ];
+
+    const outputs = fields.map(label => {
+      const row = document.createElement('div');
+      row.className = 'tooltip-row';
+
+      const name = document.createElement('span');
+      const value = document.createElement('strong');
+
+      name.textContent = label;
+      row.append(name, value);
+      tooltip.append(row);
+
+      return value;
+    });
+
+    const guide = svgNode('line', {
+      y1: p.t,
+      y2: h - p.b,
+      stroke: '#93a6b5',
+      'stroke-dasharray': '3 4',
+      visibility: 'hidden'
+    });
+
+    svg.append(guide);
+
+    const dots = [0, 1].map(k => {
+      const dot = svgNode('circle', {
+        r: 4.5,
+        fill: k === 0 ? '#087f72' : '#65799e',
+        stroke: 'white',
+        'stroke-width': 2,
         visibility: 'hidden'
       });
 
-      svg.append(line);
+      svg.append(dot);
+      return dot;
+    });
 
-      function show(i) {
-        cursor = i;
-        line.setAttribute('x1', x(i));
-        line.setAttribute('x2', x(i));
-        line.setAttribute('visibility', 'visible');
+    let cursor = selected.length - 1;
 
-        set(
-          'chart-tip',
-          `${selected[i].date} · ` +
-          `Estrategia ${fmt(series[0][i])} · ` +
-          `Benchmark ${fmt(series[1][i])}`
-        );
+    function show(i) {
+      cursor = i;
+
+      const row = selected[i];
+      title.textContent = row.date;
+
+      const vals = [
+        series[0][i],
+        series[1][i],
+        row.daily,
+        row.dd,
+        row.nav / base.nav * 100
+      ];
+
+      outputs.forEach((o, k) => {
+        o.textContent = fmt(vals[k], k !== 4);
+        o.className = k === 4 ? '' : color(vals[k]);
+      });
+
+      guide.setAttribute('x1', x(i));
+      guide.setAttribute('x2', x(i));
+      guide.setAttribute('visibility', 'visible');
+
+      dots.forEach((dot, k) => {
+        const value = series[k][i];
+        dot.setAttribute('visibility', value === null ? 'hidden' : 'visible');
+
+        if (value !== null) {
+          dot.setAttribute('cx', x(i));
+          dot.setAttribute('cy', y(value));
+        }
+      });
+
+      tooltip.hidden = false;
+
+      const tw = tooltip.offsetWidth || 236;
+      const left = x(i) + 16 + tw > w
+        ? x(i) - tw - 16
+        : x(i) + 16;
+
+      tooltip.style.left =
+        Math.max(8, Math.min(w - tw - 8, left)) + 'px';
+
+      tooltip.style.top = '20px';
+    }
+
+    function hide() {
+      tooltip.hidden = true;
+      guide.setAttribute('visibility', 'hidden');
+      dots.forEach(d => d.setAttribute('visibility', 'hidden'));
+    }
+
+    svg.onpointermove = e => {
+      const box = svg.getBoundingClientRect();
+      const pos = (e.clientX - box.left) / box.width * w;
+
+      let lo = 0;
+      let hi = selected.length - 1;
+
+      while (lo < hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        if (x(mid) < pos) lo = mid + 1;
+        else hi = mid;
       }
 
-      svg.onpointermove = e => {
-        const box = svg.getBoundingClientRect();
-        const position = (e.clientX - box.left) / box.width * w;
+      show(
+        lo > 0 && Math.abs(x(lo - 1) - pos) < Math.abs(x(lo) - pos)
+          ? lo - 1
+          : lo
+      );
+    };
 
-        let nearest = 0;
+    svg.onpointerdown = svg.onpointermove;
+    host.onpointerleave = hide;
+    host.tabIndex = 0;
 
-        for (let i = 1; i < selected.length; i++) {
-          if (
-            Math.abs(x(i) - position) <
-            Math.abs(x(nearest) - position)
-          ) {
-            nearest = i;
-          }
-        }
+    host.setAttribute(
+      'aria-label',
+      'Equity curve. Flechas para recorrer fechas; Escape para cerrar los datos.'
+    );
 
-        show(nearest);
-      };
+    host.onfocus = () => show(cursor);
+    host.onblur = hide;
 
-      host.onkeydown = e => {
-        if (
-          ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)
-        ) {
-          e.preventDefault();
+    host.onkeydown = e => {
+      if (e.key === 'Escape') {
+        hide();
+        return;
+      }
 
-          show(
-            e.key === 'Home'
-              ? 0
-              : e.key === 'End'
-                ? selected.length - 1
-                : Math.max(
-                    0,
-                    Math.min(
-                      selected.length - 1,
-                      cursor + (e.key === 'ArrowRight' ? 1 : -1)
-                    )
+      if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+        e.preventDefault();
+        tooltip.setAttribute('aria-live', 'polite');
+
+        show(
+          e.key === 'Home'
+            ? 0
+            : e.key === 'End'
+              ? selected.length - 1
+              : Math.max(
+                  0,
+                  Math.min(
+                    selected.length - 1,
+                    cursor + (e.key === 'ArrowRight' ? 1 : -1)
                   )
-          );
-        }
-      };
-
-      show(cursor);
-    }
+                )
+        );
+      }
+    };
   }
 
   function renderRange() {
     if (!data.length) return;
 
     const p = period(data, range);
+    const base = p.selected[0];
 
     document.querySelectorAll('[data-range]').forEach(b => {
       b.setAttribute(
@@ -1292,43 +1806,39 @@ if (typeof document !== 'undefined') {
       );
     });
 
-    const a = p.selected[0];
-    const last = p.selected.at(-1);
-
     set(
       'range-note',
-      `${a.date} → ${last.date} · Estrategia ${fmt(p.return)}` +
-      (
-        p.partial
-          ? ' · Período parcial: historial insuficiente.'
-          : ''
-      ) +
-      ' · Indicadores superiores: todo el historial.'
+      `${base.date} → ${data.at(-1).date}` +
+      (p.partial ? ' · Período parcial' : '')
     );
 
     graph('performance', p.selected);
-    graph('underwater', p.selected, true);
+
+    if ($('analysis-panel').open) {
+      graph('underwater', p.selected, true);
+    }
 
     tableRows('chart-table', p.selected.map(d => [
       d.date,
       {
-        text: fmt((d.nav / a.nav - 1) * 100),
-        cls: color((d.nav / a.nav - 1) * 100)
+        text: fmt((d.nav / base.nav - 1) * 100),
+        cls: color((d.nav / base.nav - 1) * 100)
       },
-      {
-        text: fmt(
-          a.bench !== null && d.bench !== null
-            ? (d.bench / a.bench - 1) * 100
-            : null
-        )
-      }
+      fmt(
+        base.bench !== null && d.bench !== null
+          ? (d.bench / base.bench - 1) * 100
+          : null
+      )
     ]));
   }
 
   function render() {
-    const last = data.at(-1);
     const first = data[0];
+    const last = data.at(-1);
+    const days = Math.round((last.time - first.time) / DAY);
+    const n = data.length - 1;
     const factor = Number($('frequency').value);
+    const rf = Number($('rf').value);
 
     set('last-date', last.date);
     set('daily', fmt(last.daily));
@@ -1337,21 +1847,59 @@ if (typeof document !== 'undefined') {
     metric('cum', last.cum);
     set('inception', 'Desde ' + first.date);
 
-    metric('cagr', cagr(data, 'nav'));
-    set('bcagr', 'Benchmark: ' + fmt(cagr(data, 'bench')));
-
-    const r = risk(data, 'nav', factor);
-    const b = risk(data, 'bench', factor);
-
-    metric('vol', r.vol);
-    set('bvol', 'Benchmark: ' + fmt(b.vol));
-
-    set('sharpe', fmt(r.sharpe, false));
-    $('sharpe').className = 'value ' + color(r.sharpe);
-    set('bsharpe', 'Benchmark: ' + fmt(b.sharpe, false));
+    metric(
+      'benchmark',
+      first.bench !== null && last.bench !== null
+        ? (last.bench / first.bench - 1) * 100
+        : null
+    );
 
     metric('maxdd', Math.min(...data.map(d => d.dd)));
-    set('dd', 'Actual: ' + fmt(last.dd));
+    set('dd', 'Caída actual: ' + fmt(last.dd));
+
+    set('observations', data.length + ' cierres');
+    set('duration', days + ' días de historial');
+    set('period-chip', first.date + ' → ' + last.date);
+
+    $('benchmark-legend').hidden = first.bench === null;
+
+    set('cagr-label', days < 365 ? 'Retorno anualizado' : 'CAGR');
+    $('cagr-badge').hidden = days >= 365;
+
+    metric('cagr', cagr(data, 'nav'));
+    set('bcagr', 'VOO: ' + fmt(cagr(data, 'bench')));
+
+    const a = riskEstimate(data, 'nav', factor, rf);
+    const b = riskEstimate(data, 'bench', factor, rf);
+
+    metric('vol', a.vol);
+    $('vol').textContent = fmt(a.vol).replace(/^\+/, '');
+    $('vol').className = 'value';
+
+    metric('sharpe', a.sharpe, false);
+
+    set('bvol', 'VOO: ' + fmt(b.vol).replace(/^\+/, ''));
+    set('bsharpe', 'VOO: ' + fmt(b.sharpe, false));
+
+    $('vol-badge').hidden = n >= 60;
+    $('sharpe-badge').hidden = n >= 60;
+
+    set(
+      'sample-note',
+      `${n} retornos observados · ${days} días · ` +
+      `Factor anual: ${factor} · ` +
+      `Tasa libre de riesgo: ${rf.toFixed(2)}%`
+    );
+
+    set(
+      'annual-note',
+      days < 365
+        ? 'Anualización hipotética: extrapola el ritmo observado a un año. ' +
+          'No es una rentabilidad anual obtenida ni una predicción. ' +
+          'Con pocos datos puede variar de forma considerable.'
+        : 'CAGR calculado para el historial completo. ' +
+          'Volatilidad y Sharpe son estimaciones históricas, no pronósticos.'
+    );
 
     $('trailing').replaceChildren();
 
@@ -1434,45 +1982,39 @@ if (typeof document !== 'undefined') {
       )
     ]));
 
-    renderRange();
-    $('download').disabled = false;
-
     const notes = [...warnings];
 
     if (!cadence(data, factor)) {
       notes.push(
-        'La frecuencia elegida no coincide con las fechas: ' +
+        'La frecuencia no coincide con las fechas: ' +
         'volatilidad y Sharpe no disponibles.'
       );
     }
 
-    if (data.length < 21) {
-      notes.push(
-        'Volatilidad y Sharpe requieren al menos 20 retornos.'
-      );
+    if (n < 2) {
+      notes.push('Volatilidad y Sharpe requieren dos retornos.');
     }
 
-    if ((last.time - first.time) / DAY < 365) {
-      notes.push(
-        'CAGR no disponible: historial inferior a un año.'
-      );
-    }
+    set(
+      'diagnostics',
+      notes.length
+        ? notes.join('\n')
+        : 'Serie validada. Los indicadores se calculan desde el NAV.'
+    );
+
+    $('diagnostics').style.whiteSpace = 'pre-line';
+    $('download').disabled = false;
 
     const age = Math.floor((Date.now() - last.time) / DAY);
 
-    if (age > 7) {
-      notes.push(
-        `Último registro de hace ${age} días; ` +
-        'comprueba la actualización de la fuente.'
-      );
-    }
-
     status(
-      `${data.length} registros válidos · ` +
-      `${first.date} → ${last.date}\n` +
-      notes.join('\n'),
-      notes.length ? 'warn' : ''
+      age > 7
+        ? `Último cierre de hace ${age} días. ` +
+          'Comprueba la actualización de la fuente.'
+        : ''
     );
+
+    renderRange();
   }
 
   function accept(text) {
@@ -1485,39 +2027,35 @@ if (typeof document !== 'undefined') {
   async function load() {
     const ticket = ++generation;
 
-    activeController?.abort();
-
-    const controller = new AbortController();
-    activeController = controller;
+    controller?.abort();
+    controller = new AbortController();
+    const active = controller;
 
     if (location.protocol === 'file:') {
       status(
-        'Abre nav_history.csv con el botón «Abrir CSV local». ' +
-        'Para carga automática, sirve esta página y el CSV ' +
-        'desde la misma carpeta.'
+        'Abre el CSV desde «Configuración de datos» para ver el historial.'
       );
       return;
     }
 
-    status('Cargando y validando el historial…');
+    status('Cargando historial…');
     $('reload').disabled = true;
 
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(() => active.abort(), 15000);
 
     try {
-      const res = await fetch('nav_history.csv', {
+      const response = await fetch('nav_history.csv', {
         cache: 'no-cache',
-        signal: controller.signal
+        signal: active.signal
       });
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw Error(
-          'No se pudo cargar nav_history.csv (HTTP ' +
-          res.status + ').'
+          'No se pudo cargar el CSV (HTTP ' + response.status + ').'
         );
       }
 
-      const text = await res.text();
+      const text = await response.text();
 
       if (text.length > 10000000) {
         throw Error('CSV demasiado grande; límite de 10 MB.');
@@ -1535,10 +2073,9 @@ if (typeof document !== 'undefined') {
           (
             data.length
               ? ' Se conserva el último historial válido.'
-              : ' Usa «Abrir CSV local» o comprueba el archivo ' +
-                'en el servidor.'
+              : ' Revisa «Configuración de datos».'
           ),
-          'error'
+          true
         );
       }
     } finally {
@@ -1553,6 +2090,17 @@ if (typeof document !== 'undefined') {
     if (data.length) render();
   };
 
+  $('rf').onchange = () => {
+    const input = $('rf');
+
+    if (!input.checkValidity() || input.value === '') {
+      input.reportValidity();
+      input.value = '0';
+    }
+
+    if (data.length) render();
+  };
+
   document.querySelectorAll('[data-range]').forEach(b => {
     b.onclick = () => {
       range = b.dataset.range;
@@ -1560,12 +2108,18 @@ if (typeof document !== 'undefined') {
     };
   });
 
+  $('analysis-panel').ontoggle = () => {
+    if (data.length && $('analysis-panel').open) {
+      graph('underwater', period(data, range).selected, true);
+    }
+  };
+
   $('file').onchange = async e => {
     const f = e.target.files[0];
     if (!f) return;
 
     const ticket = ++generation;
-    activeController?.abort();
+    controller?.abort();
     $('reload').disabled = false;
 
     try {
@@ -1573,7 +2127,7 @@ if (typeof document !== 'undefined') {
         throw Error('CSV demasiado grande; límite de 10 MB.');
       }
 
-      status('Validando ' + f.name + '…');
+      status('Validando historial…');
 
       const text = await f.text();
       if (ticket === generation) accept(text);
@@ -1586,7 +2140,7 @@ if (typeof document !== 'undefined') {
               ? ' Se conserva el último historial válido.'
               : ''
           ),
-          'error'
+          true
         );
       }
     } finally {
@@ -1611,13 +2165,36 @@ if (typeof document !== 'undefined') {
       new Blob([content], { type: 'text/csv;charset=utf-8' })
     );
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'nav_history_validated.csv';
-    a.click();
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'nav_history_validated.csv';
+    link.click();
 
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
+
+  let resizeTimer;
+
+  if (typeof ResizeObserver !== 'undefined') {
+    let lastWidth = 0;
+
+    const observer = new ResizeObserver(entries => {
+      const width = entries[0].contentRect.width;
+
+      if (Math.abs(width - lastWidth) < 1) return;
+
+      lastWidth = width;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderRange, 100);
+    });
+
+    observer.observe($('performance'));
+  } else {
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderRange, 100);
+    });
+  }
 
   load();
 }
