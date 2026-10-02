@@ -17,7 +17,6 @@
   --green: #087f72;
   --red: #b64151;
   --blue: #65799e;
-  --gold: #91641c;
 }
 
 * { box-sizing: border-box; }
@@ -149,7 +148,7 @@ main {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 22px;
 }
@@ -179,11 +178,36 @@ main {
   margin: 9px 0;
 }
 
+.cards .value { font-size: 28px; }
 .small { font-size: 12px; }
 .positive { color: var(--green); }
 .negative { color: var(--red); }
 .neutral { color: var(--muted); }
 .panel { padding: 23px; margin-bottom: 16px; }
+
+.comparison {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 9px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparison strong { font-weight: 500; }
+
+.metric-foot {
+  min-height: 20px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.dd-value { display: flex; align-items: baseline; gap: 7px; }
+.dd-value small { font-size: 15px; letter-spacing: 0; }
 
 .panel-head {
   display: flex;
@@ -249,11 +273,7 @@ p { margin: 5px 0 12px; }
   border-top: 2px dashed var(--blue);
 }
 
-.chart {
-  position: relative;
-  width: 100%;
-  min-height: 100px;
-}
+.chart { position: relative; width: 100%; min-height: 100px; }
 
 .chart svg {
   display: block;
@@ -361,25 +381,16 @@ details.panel[open] > summary::after { content: "−"; }
   font-variant-numeric: tabular-nums;
 }
 
-.analytics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.analytics .kpi { background: #f7f9fb; border-radius: 8px; }
-.analytics .value { font-size: 27px; }
-
 .badge {
   font-size: 10px;
   background: #fbf2df;
   color: #7d581d;
   padding: 3px 7px;
   border-radius: 4px;
-  margin-left: 6px;
   white-space: nowrap;
 }
+
+.cards .badge { display: inline-block; margin: 0; font-size: 9px; }
 
 .note {
   background: #f6f8fa;
@@ -449,6 +460,19 @@ caption {
   margin-bottom: 10px;
 }
 
+.heatmap { min-width: 830px; }
+
+.heatmap td:not(:first-child) {
+  border: 4px solid white;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.heatmap th:not(:first-child) { text-align: center; }
+.heatmap td:last-child { font-weight: 700; }
+.monthly-note { margin: 12px 0 0; font-size: 11px; color: var(--muted); }
+
 .status {
   font-size: 13px;
   padding: 12px 16px;
@@ -486,8 +510,13 @@ footer {
 li { margin: 9px 0; }
 [hidden] { display: none !important; }
 
+@media (max-width: 1100px) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 @media (max-width: 850px) {
   .cards { grid-template-columns: repeat(2, 1fr); }
+  .cards .kpi:last-child { grid-column: span 2; }
   .header-right { gap: 12px; }
   .intro { align-items: flex-start; }
   .intro h1 { font-size: 26px; }
@@ -509,7 +538,6 @@ li { margin: 9px 0; }
   .chart svg { height: 320px; }
   .legend { gap: 14px; }
   .trailing { grid-template-columns: repeat(2, 1fr); }
-  .analytics { grid-template-columns: 1fr; }
   .detail-body { padding: 0 17px 18px; }
   details.panel > summary { padding: 17px; }
   .chart-meta { gap: 9px; }
@@ -577,27 +605,66 @@ li { margin: 9px 0; }
 
   <div class="cards">
     <section class="card kpi">
-      <div class="label">Retorno acumulado</div>
+      <div class="label">Retorno total</div>
       <div id="cum" class="value">—</div>
-      <div id="inception" class="small muted">Desde el primer registro</div>
+      <div id="inception" class="metric-foot">Desde el primer registro</div>
+      <div class="comparison">
+        <span>S&amp;P 500 (VOO)</span>
+        <strong id="benchmark">—</strong>
+      </div>
     </section>
 
     <section class="card kpi">
-      <div class="label">Benchmark · VOO</div>
-      <div id="benchmark" class="value">—</div>
-      <div class="small muted">Mismo período que la estrategia</div>
+      <div class="label">CAGR compuesto</div>
+      <div id="cagr" class="value">—</div>
+      <div class="metric-foot">
+        <span id="cagr-badge" class="badge">Anualización estimada</span>
+        <span id="cagr-observed" hidden>Historial ≥ 1 año</span>
+      </div>
+      <div class="comparison">
+        <span>S&amp;P 500 (VOO)</span>
+        <strong id="bcagr">—</strong>
+      </div>
     </section>
 
     <section class="card kpi">
-      <div class="label">Caída máxima</div>
-      <div id="maxdd" class="value">—</div>
-      <div id="dd" class="small muted">Caída actual: —</div>
+      <div class="label">Volatilidad anualizada</div>
+      <div id="vol" class="value">—</div>
+      <div class="metric-foot">
+        <span id="vol-badge" class="badge">Estimación provisional</span>
+        <span id="vol-observed" hidden>Variabilidad de los retornos</span>
+      </div>
+      <div class="comparison">
+        <span>S&amp;P 500 (VOO)</span>
+        <strong id="bvol">—</strong>
+      </div>
     </section>
 
     <section class="card kpi">
-      <div class="label">Historial disponible</div>
-      <div id="observations" class="value">—</div>
-      <div id="duration" class="small muted">Registros de cierre</div>
+      <div class="label">Sharpe ratio</div>
+      <div id="sharpe" class="value">—</div>
+      <div class="metric-foot">
+        <span id="sharpe-badge" class="badge">Estimación provisional</span>
+        <span id="sharpe-observed" hidden>Retorno ajustado por riesgo</span>
+      </div>
+      <div class="comparison">
+        <span>S&amp;P 500 (VOO)</span>
+        <strong id="bsharpe">—</strong>
+      </div>
+    </section>
+
+    <section class="card kpi">
+      <div class="label">Drawdown · máximo / actual</div>
+      <div class="value dd-value">
+        <span id="maxdd">—</span>
+        <small class="muted">/</small>
+        <small id="dd">—</small>
+      </div>
+      <div class="metric-foot">Caída desde el máximo del historial</div>
+      <div class="comparison">
+        <span>S&amp;P 500 (VOO)</span>
+        <strong id="bdd">—</strong>
+      </div>
     </section>
   </div>
 
@@ -664,46 +731,54 @@ li { margin: 9px 0; }
     </div>
   </details>
 
+  <section class="card panel">
+    <h2>Rendimientos mensuales (%)</h2>
+    <p class="small muted">Mapa de rentabilidad por mes y acumulado del año.</p>
+
+    <div class="scroll">
+      <table id="monthly" class="heatmap">
+        <caption>
+          * Período parcial. — Sin registros.
+          N/D: falta la base del mes anterior.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Año</th>
+            <th scope="col">Ene</th>
+            <th scope="col">Feb</th>
+            <th scope="col">Mar</th>
+            <th scope="col">Abr</th>
+            <th scope="col">May</th>
+            <th scope="col">Jun</th>
+            <th scope="col">Jul</th>
+            <th scope="col">Ago</th>
+            <th scope="col">Sep</th>
+            <th scope="col">Oct</th>
+            <th scope="col">Nov</th>
+            <th scope="col">Dic</th>
+            <th scope="col">Año / YTD</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <p class="monthly-note">
+      Verde: retorno positivo · Rojo: retorno negativo.
+      El signo y la cifra identifican cada resultado.
+    </p>
+  </section>
+
   <details class="card panel" id="analysis-panel">
-    <summary>Análisis de riesgo y anualización</summary>
+    <summary>Drawdown y detalles de las métricas</summary>
     <div class="detail-body">
       <p id="sample-note" class="small muted"></p>
-
-      <div class="analytics">
-        <section class="kpi">
-          <div class="label">
-            <span id="cagr-label">Retorno anualizado</span>
-            <span id="cagr-badge" class="badge">Estimación</span>
-          </div>
-          <div id="cagr" class="value">—</div>
-          <div id="bcagr" class="small muted">VOO: —</div>
-        </section>
-
-        <section class="kpi">
-          <div class="label">
-            Volatilidad anualizada
-            <span id="vol-badge" class="badge">Provisional</span>
-          </div>
-          <div id="vol" class="value">—</div>
-          <div id="bvol" class="small muted">VOO: —</div>
-        </section>
-
-        <section class="kpi">
-          <div class="label">
-            Sharpe anualizado
-            <span id="sharpe-badge" class="badge">Provisional</span>
-          </div>
-          <div id="sharpe" class="value">—</div>
-          <div id="bsharpe" class="small muted">VOO: —</div>
-        </section>
-      </div>
-
       <p id="annual-note" class="note warn"></p>
 
       <p class="small muted">
-        Estos indicadores se recalculan con cada cierre.
-        Volatilidad y Sharpe requieren al menos dos retornos
-        y una frecuencia diaria compatible.
+        Los indicadores superiores corresponden a todo el historial
+        y se actualizan con cada cierre. Volatilidad y Sharpe requieren
+        al menos dos retornos y una frecuencia diaria compatible.
       </p>
 
       <h2 style="margin-top:24px">Caídas desde máximos</h2>
@@ -712,39 +787,6 @@ li { margin: 9px 0; }
         incluso al filtrar fechas.
       </p>
       <div id="underwater" class="chart empty">Esperando historial.</div>
-    </div>
-  </details>
-
-  <details class="card panel">
-    <summary>Rendimientos mensuales</summary>
-    <div class="detail-body">
-      <div class="scroll">
-        <table id="monthly">
-          <caption>
-            * Período parcial. — Sin registros.
-            N/D: falta la base del mes anterior.
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Año</th>
-              <th scope="col">Ene</th>
-              <th scope="col">Feb</th>
-              <th scope="col">Mar</th>
-              <th scope="col">Abr</th>
-              <th scope="col">May</th>
-              <th scope="col">Jun</th>
-              <th scope="col">Jul</th>
-              <th scope="col">Ago</th>
-              <th scope="col">Sep</th>
-              <th scope="col">Oct</th>
-              <th scope="col">Nov</th>
-              <th scope="col">Dic</th>
-              <th scope="col">Año / YTD</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
     </div>
   </details>
 
@@ -1003,6 +1045,23 @@ function validateCSV(text) {
   }
 
   const headers = rows.shift();
+
+  const allowed = [
+    'date',
+    'nav',
+    'daily_return_pct',
+    'cum_ret_pct',
+    'drawdown_pct',
+    'benchmark_nav',
+    'benchmark_cum_ret_pct'
+  ];
+
+  if (headers.some(h => !allowed.includes(h))) {
+    throw Error(
+      'El CSV contiene columnas no admitidas. ' +
+      'Utiliza solo la serie agregada pública.'
+    );
+  }
 
   if (new Set(headers).size !== headers.length) {
     throw Error('Columnas duplicadas.');
@@ -1304,7 +1363,6 @@ if (typeof module !== 'undefined') {
   module.exports = PortfolioCore;
 }
 
-// Interpolación monótona: conserva los cierres y evita picos artificiales.
 function smoothPath(points) {
   if (!points.length) return '';
 
@@ -1411,10 +1469,21 @@ if (typeof document !== 'undefined') {
     $('status').hidden = !message;
   }
 
-  function cell(tr, text, cls = '') {
+  function cell(tr, text, cls = '', heat = null) {
     const td = document.createElement('td');
     td.textContent = text;
     td.className = cls;
+
+    if (Number.isFinite(heat)) {
+      const alpha = .07 + Math.min(Math.abs(heat) / 10, 1) * .15;
+
+      td.style.backgroundColor = heat > 0
+        ? `rgba(8,127,114,${alpha})`
+        : heat < 0
+          ? `rgba(182,65,81,${alpha})`
+          : '#f3f6f8';
+    }
+
     tr.append(td);
   }
 
@@ -1424,7 +1493,11 @@ if (typeof document !== 'undefined') {
 
     rows.forEach(values => {
       const tr = document.createElement('tr');
-      values.forEach(v => cell(tr, v.text ?? v, v.cls ?? ''));
+
+      values.forEach(v => {
+        cell(tr, v.text ?? v, v.cls ?? '', v.heat ?? null);
+      });
+
       body.append(tr);
     });
   }
@@ -1854,20 +1927,19 @@ if (typeof document !== 'undefined') {
         : null
     );
 
-    metric('maxdd', Math.min(...data.map(d => d.dd)));
-    set('dd', 'Caída actual: ' + fmt(last.dd));
+    set('maxdd', fmt(Math.min(...data.map(d => d.dd))));
+    set('dd', fmt(last.dd));
+    $('maxdd').className = 'negative';
+    $('dd').className = 'negative';
 
-    set('observations', data.length + ' cierres');
-    set('duration', days + ' días de historial');
     set('period-chip', first.date + ' → ' + last.date);
-
     $('benchmark-legend').hidden = first.bench === null;
 
-    set('cagr-label', days < 365 ? 'Retorno anualizado' : 'CAGR');
+    $('cagr-observed').hidden = days < 365;
     $('cagr-badge').hidden = days >= 365;
 
     metric('cagr', cagr(data, 'nav'));
-    set('bcagr', 'VOO: ' + fmt(cagr(data, 'bench')));
+    set('bcagr', fmt(cagr(data, 'bench')));
 
     const a = riskEstimate(data, 'nav', factor, rf);
     const b = riskEstimate(data, 'bench', factor, rf);
@@ -1878,11 +1950,30 @@ if (typeof document !== 'undefined') {
 
     metric('sharpe', a.sharpe, false);
 
-    set('bvol', 'VOO: ' + fmt(b.vol).replace(/^\+/, ''));
-    set('bsharpe', 'VOO: ' + fmt(b.sharpe, false));
+    set('bvol', fmt(b.vol).replace(/^\+/, ''));
+    set('bsharpe', fmt(b.sharpe, false));
 
     $('vol-badge').hidden = n >= 60;
     $('sharpe-badge').hidden = n >= 60;
+    $('vol-observed').hidden = n < 60;
+    $('sharpe-observed').hidden = n < 60;
+
+    let bp = first.bench;
+    let bd = 0;
+
+    if (data.some(d => d.bench === null)) {
+      set('bdd', 'N/D');
+    } else {
+      data.forEach(d => {
+        bp = Math.max(bp, d.bench);
+        bd = Math.min(bd, (d.bench / bp - 1) * 100);
+      });
+
+      set(
+        'bdd',
+        fmt(bd) + ' / ' + fmt((last.bench / bp - 1) * 100)
+      );
+    }
 
     set(
       'sample-note',
@@ -1949,7 +2040,8 @@ if (typeof document !== 'undefined') {
           text: item
             ? fmt(item.value) + (item.partial ? '*' : '')
             : '—',
-          cls: item ? color(item.value) : 'neutral'
+          cls: item ? color(item.value) : 'neutral',
+          heat: item?.value ?? null
         });
       }
 
@@ -1964,7 +2056,8 @@ if (typeof document !== 'undefined') {
       cells.push({
         text: fmt(v) +
           (!prior || ys.at(-1).date < year + '-12-31' ? '*' : ''),
-        cls: color(v)
+        cls: color(v),
+        heat: v
       });
 
       return cells;
